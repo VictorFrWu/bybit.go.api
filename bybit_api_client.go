@@ -31,15 +31,6 @@ type Client struct {
 
 type doFunc func(req *http.Request) (*http.Response, error)
 
-// Globals
-const (
-	timestampKey  = "X-BAPI-TIMESTAMP"
-	signatureKey  = "X-BAPI-SIGN"
-	apiRequestKey = "X-BAPI-API-KEY"
-	recvWindowKey = "X-BAPI-RECV-WINDOW"
-	signTypeKey   = "2"
-)
-
 func currentTimestamp() int64 {
 	return FormatTimestamp(time.Now())
 }
