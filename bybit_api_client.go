@@ -1,13 +1,13 @@
-package bybit
+package bybit_connector
 
 import (
-	"bybit.go.api/handlers"
 	"bytes"
 	"context"
 	"crypto/hmac"
 	"crypto/sha256"
 	"encoding/json"
 	"fmt"
+	handlers "github.com/wuhewuhe/bybit.go.api/handlers"
 	"io"
 	"log"
 	"net/http"
@@ -31,6 +31,20 @@ type Client struct {
 
 type doFunc func(req *http.Request) (*http.Response, error)
 
+type ClientOption func(*Client)
+
+func WithDebug(debug bool) ClientOption {
+	return func(c *Client) {
+		c.Debug = debug
+	}
+}
+
+func WithBaseURL(baseURL string) ClientOption {
+	return func(c *Client) {
+		c.BaseURL = baseURL
+	}
+}
+
 func currentTimestamp() int64 {
 	return FormatTimestamp(time.Now())
 }
@@ -38,6 +52,14 @@ func currentTimestamp() int64 {
 // FormatTimestamp formats a time into Unix timestamp in milliseconds, as requested by Bybit.
 func FormatTimestamp(t time.Time) int64 {
 	return t.UnixNano() / int64(time.Millisecond)
+}
+
+type ServerResponse struct {
+	RetCode    int         `json:"retCode"`
+	RetMsg     string      `json:"retMsg"`
+	Result     interface{} `json:"result"`
+	RetExtInfo struct{}    `json:"retExtInfo"`
+	Time       int64       `json:"time"`
 }
 
 func PrettyPrint(i interface{}) string {
@@ -51,21 +73,22 @@ func (c *Client) debug(format string, v ...interface{}) {
 	}
 }
 
-// NewClient Create client function for initialising new Bybit client
-func NewClient(apiKey string, secretKey string, baseURL ...string) *Client {
-	url := "https://api.bybit.com"
-
-	if len(baseURL) > 0 {
-		url = baseURL[0]
-	}
-
-	return &Client{
+// NewBybitHttpClient NewClient Create client function for initialising new Bybit client
+func NewBybitHttpClient(apiKey string, secretKey string, options ...ClientOption) *Client {
+	c := &Client{
 		APIKey:     apiKey,
 		SecretKey:  secretKey,
-		BaseURL:    url,
+		BaseURL:    "https://api.bybit.com",
 		HTTPClient: http.DefaultClient,
 		Logger:     log.New(os.Stderr, Name, log.LstdFlags),
 	}
+
+	// Apply the provided options
+	for _, opt := range options {
+		opt(c)
+	}
+
+	return c
 }
 
 func (c *Client) parseRequest(r *request, opts ...RequestOption) (err error) {
@@ -120,7 +143,7 @@ func (c *Client) parseRequest(r *request, opts ...RequestOption) (err error) {
 	if queryString != "" {
 		fullURL = fmt.Sprintf("%s?%s", fullURL, queryString)
 	}
-	// c.debug("full url: %s, body: %s", fullURL, bodyString)
+	c.debug("full url: %s, body: %s", fullURL, bodyString)
 	r.fullURL = fullURL
 	r.header = header
 	r.body = body
@@ -135,7 +158,7 @@ func (c *Client) callAPI(ctx context.Context, r *request, opts ...RequestOption)
 	}
 	req = req.WithContext(ctx)
 	req.Header = r.header
-	// c.debug("request: %#v", req)
+	c.debug("request: %#v", req)
 	f := c.do
 	if f == nil {
 		f = c.HTTPClient.Do
@@ -156,15 +179,17 @@ func (c *Client) callAPI(ctx context.Context, r *request, opts ...RequestOption)
 			err = cerr
 		}
 	}()
-	// c.debug("response: %#v", res)
+	c.debug("response: %#v", res)
 	c.debug("response body: %s", string(data))
-	// c.debug("response status code: %d", res.StatusCode)
+	c.debug("response status code: %d", res.StatusCode)
 
 	if res.StatusCode >= http.StatusBadRequest {
-		apiErr := new(handlers.APIError)
+		var (
+			apiErr = new(handlers.APIError)
+		)
 		e := json.Unmarshal(data, apiErr)
 		if e != nil {
-			// c.debug("failed to unmarshal json: %s", e)
+			c.debug("failed to unmarshal json: %s", e)
 		}
 		return nil, apiErr
 	}

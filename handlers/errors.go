@@ -1,6 +1,9 @@
 package handlers
 
-import "fmt"
+import (
+	"errors"
+	"fmt"
+)
 
 // APIError define API error when response status is 4xx or 5xx
 type APIError struct {
@@ -15,6 +18,7 @@ func (e APIError) Error() string {
 
 // IsAPIError check if e is an API error
 func IsAPIError(e error) bool {
-	_, ok := e.(*APIError)
+	var APIError *APIError
+	ok := errors.As(e, &APIError)
 	return ok
 }
