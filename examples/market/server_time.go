@@ -1,9 +1,9 @@
 package main
 
 import (
-	bybit "bybit.go.api"
 	"context"
 	"fmt"
+	bybit "github.com/wuhewuhe/bybit.go.api"
 )
 
 func main() {
@@ -12,12 +12,13 @@ func main() {
 
 func ServerTime() {
 
-	client := bybit.NewClient("", "")
-
-	// set to debug mode
-	client.Debug = true
+	client := bybit.NewBybitHttpClient("", "")
 
 	// NewServerTimeService
-	serverTime := client.NewServerTimeService().Do(context.Background())
+	serverTime, err := client.NewServerTimeService().Do(context.Background())
+	if err != nil {
+		fmt.Println(err)
+		return
+	}
 	fmt.Println(bybit.PrettyPrint(serverTime))
 }

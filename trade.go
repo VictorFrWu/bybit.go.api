@@ -1,1 +1,1 @@
-package bybit
+package bybit_connector
