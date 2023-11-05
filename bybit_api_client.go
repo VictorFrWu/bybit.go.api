@@ -25,9 +25,6 @@ type ServerResponse struct {
 	Time       int64       `json:"time"`
 }
 
-// TimeInForceType define time in force type of order
-type TimeInForceType string
-
 // Client define API client
 type Client struct {
 	APIKey     string
@@ -237,7 +234,7 @@ func (c *Client) NewPlaceOrderService(category, symbol, side, orderType, qty str
 	}
 }
 
-func (c *Client) NewPlaceTradeService(params map[string]interface{}) *Trade {
+func (c *Client) NewTradeService(params map[string]interface{}) *Trade {
 	return &Trade{
 		c:      c,
 		params: params,
