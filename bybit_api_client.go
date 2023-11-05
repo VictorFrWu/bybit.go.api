@@ -67,6 +67,13 @@ func (c *Client) debug(format string, v ...interface{}) {
 	}
 }
 
+func GetCurrentTime() int64 {
+	now := time.Now()
+	unixNano := now.UnixNano()
+	timeStamp := unixNano / int64(time.Millisecond)
+	return timeStamp
+}
+
 // NewBybitHttpClient NewClient Create client function for initialising new Bybit client
 func NewBybitHttpClient(apiKey string, APISecret string, options ...ClientOption) *Client {
 	c := &Client{
@@ -109,9 +116,7 @@ func (c *Client) parseRequest(r *request, opts ...RequestOption) (err error) {
 	header.Set("User-Agent", fmt.Sprintf("%s/%s", Name, Version))
 
 	if r.secType == secTypeSigned {
-		now := time.Now()
-		unixNano := now.UnixNano()
-		timeStamp := unixNano / 1000000
+		timeStamp := GetCurrentTime()
 		header.Set(signTypeKey, "2")
 		header.Set(apiRequestKey, c.APIKey)
 		header.Set(timestampKey, strconv.FormatInt(timeStamp, 10))
@@ -188,11 +193,6 @@ func (c *Client) callAPI(ctx context.Context, r *request, opts ...RequestOption)
 	return data, nil
 }
 
-// NewServerTimeService Market Endpoints
-func (c *Client) NewServerTimeService() *ServerTime {
-	return &ServerTime{c: c}
-}
-
 // NewMarketKlineService Market Endpoints
 func (c *Client) NewMarketKlineService(klineType, category, symbol, interval string) *Klines {
 	return &Klines{
@@ -201,6 +201,27 @@ func (c *Client) NewMarketKlineService(klineType, category, symbol, interval str
 		symbol:    symbol,
 		interval:  interval,
 		klineType: klineType,
+	}
+}
+
+func (c *Client) NewMarketKLinesService(klineType string, params map[string]interface{}) *MarketClient {
+	return &MarketClient{
+		c:         c,
+		klineType: klineType,
+		params:    params,
+	}
+}
+
+func (c *Client) NewMarketInfoServiceNoParams() *MarketClient {
+	return &MarketClient{
+		c: c,
+	}
+}
+
+func (c *Client) NewMarketInfoService(params map[string]interface{}) *MarketClient {
+	return &MarketClient{
+		c:      c,
+		params: params,
 	}
 }
 
@@ -213,5 +234,12 @@ func (c *Client) NewPlaceOrderService(category, symbol, side, orderType, qty str
 		side:      side,
 		orderType: orderType,
 		qty:       qty,
+	}
+}
+
+func (c *Client) NewPlaceTradeService(params map[string]interface{}) *Trade {
+	return &Trade{
+		c:      c,
+		params: params,
 	}
 }

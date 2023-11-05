@@ -15,7 +15,7 @@ func ServerTime() {
 	client := bybit.NewBybitHttpClient("", "")
 
 	// NewServerTimeService
-	serverTime, err := client.NewServerTimeService().Do(context.Background())
+	serverTime, err := client.NewMarketInfoServiceNoParams().GetServerTime(context.Background())
 	if err != nil {
 		fmt.Println(err)
 		return

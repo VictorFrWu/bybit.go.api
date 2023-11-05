@@ -3,21 +3,17 @@ package bybit_connector
 import (
 	"context"
 	"encoding/json"
+	"github.com/wuhewuhe/bybit.go.api/handlers"
 	"net/http"
 )
 
-type ServerTimeResult struct {
-	TimeSecond string `json:"timeSecond"`
-	TimeNano   string `json:"timeNano"`
+type MarketClient struct {
+	c         *Client
+	klineType string
+	params    map[string]interface{}
 }
 
-// ServerTime Binance Check Server Time endpoint (GET /v5/market/time)
-type ServerTime struct {
-	c *Client
-}
-
-// Do Send the request
-func (s *ServerTime) Do(ctx context.Context, opts ...RequestOption) (res *ServerResponse, err error) {
+func (s *MarketClient) GetServerTime(ctx context.Context, opts ...RequestOption) (res *ServerResponse, err error) {
 	r := &request{
 		method:   http.MethodGet,
 		endpoint: "/v5/market/time",
@@ -35,71 +31,258 @@ func (s *ServerTime) Do(ctx context.Context, opts ...RequestOption) (res *Server
 	return res, nil
 }
 
-type MarketKlineCandle struct {
-	StartTime  string `json:"startTime"`
-	OpenPrice  string `json:"openPrice"`
-	HighPrice  string `json:"highPrice"`
-	LowPrice   string `json:"lowPrice"`
-	ClosePrice string `json:"closePrice"`
-	Volume     string `json:"volume"`
-	Turnover   string `json:"turnover"`
-}
-
-type MarketKlineResponse struct {
-	Category string              `json:"category"`
-	Symbol   string              `json:"symbol"`
-	List     []MarketKlineCandle `json:"list"`
-}
-
-// Klines Market Kline (GET /v5/market/kline)
-type Klines struct {
-	c         *Client
-	klineType string
-	category  string
-	symbol    string
-	interval  string
-	limit     *int
-	start     *uint64
-	end       *uint64
-}
-
-// Limit set limit
-func (s *Klines) Limit(limit int) *Klines {
-	s.limit = &limit
-	return s
-}
-
-// Start set startTime
-func (s *Klines) Start(startTime uint64) *Klines {
-	s.start = &startTime
-	return s
-}
-
-// End set endTime
-func (s *Klines) End(endTime uint64) *Klines {
-	s.end = &endTime
-	return s
-}
-
-// Do Send the request
-func (s *Klines) Do(ctx context.Context, opts ...RequestOption) (res *ServerResponse, err error) {
+func (s *MarketClient) GetMarketKline(ctx context.Context, opts ...RequestOption) (res *ServerResponse, err error) {
+	if err = handlers.ValidateParams(s.params); err != nil {
+		return nil, err
+	}
 	r := &request{
 		method:   http.MethodGet,
 		endpoint: "/v5/market/" + s.klineType,
 		secType:  secTypeNone,
 	}
-	r.setParam("category", s.category)
-	r.setParam("symbol", s.symbol)
-	r.setParam("interval", s.interval)
-	if s.limit != nil {
-		r.setParam("limit", *s.limit)
+	r.setParams(s.params)
+	data, err := s.c.callAPI(ctx, r, opts...)
+	if err != nil {
+		return nil, err
 	}
-	if s.start != nil {
-		r.setParam("start", *s.start)
+	res = new(ServerResponse)
+	err = json.Unmarshal(data, res)
+	if err != nil {
+		return nil, err
 	}
-	if s.end != nil {
-		r.setParam("end", *s.end)
+	return res, nil
+}
+
+func (s *MarketClient) GetInstrumentInfo(ctx context.Context, opts ...RequestOption) (res *ServerResponse, err error) {
+	if err = handlers.ValidateParams(s.params); err != nil {
+		return nil, err
 	}
+	r := &request{
+		method:   http.MethodGet,
+		endpoint: "/v5/market/instruments-info",
+		secType:  secTypeNone,
+	}
+	r.setParams(s.params)
+	data, err := s.c.callAPI(ctx, r, opts...)
+	if err != nil {
+		return nil, err
+	}
+	res = new(ServerResponse)
+	err = json.Unmarshal(data, res)
+	if err != nil {
+		return nil, err
+	}
+	return res, nil
+}
+
+func (s *MarketClient) GetOrderBookInfo(ctx context.Context, opts ...RequestOption) (res *ServerResponse, err error) {
+	if err = handlers.ValidateParams(s.params); err != nil {
+		return nil, err
+	}
+	r := &request{
+		method:   http.MethodGet,
+		endpoint: "/v5/market/orderbook",
+		secType:  secTypeNone,
+	}
+	r.setParams(s.params)
+	data, err := s.c.callAPI(ctx, r, opts...)
+	if err != nil {
+		return nil, err
+	}
+	res = new(ServerResponse)
+	err = json.Unmarshal(data, res)
+	if err != nil {
+		return nil, err
+	}
+	return res, nil
+}
+
+func (s *MarketClient) GetMarketTickers(ctx context.Context, opts ...RequestOption) (res *ServerResponse, err error) {
+	if err = handlers.ValidateParams(s.params); err != nil {
+		return nil, err
+	}
+	r := &request{
+		method:   http.MethodGet,
+		endpoint: "/v5/market/tickers",
+		secType:  secTypeNone,
+	}
+	r.setParams(s.params)
+	data, err := s.c.callAPI(ctx, r, opts...)
+	if err != nil {
+		return nil, err
+	}
+	res = new(ServerResponse)
+	err = json.Unmarshal(data, res)
+	if err != nil {
+		return nil, err
+	}
+	return res, nil
+}
+
+func (s *MarketClient) GetFundingRates(ctx context.Context, opts ...RequestOption) (res *ServerResponse, err error) {
+	if err = handlers.ValidateParams(s.params); err != nil {
+		return nil, err
+	}
+	r := &request{
+		method:   http.MethodGet,
+		endpoint: "/v5/market/tickers",
+		secType:  secTypeNone,
+	}
+	r.setParams(s.params)
+	data, err := s.c.callAPI(ctx, r, opts...)
+	if err != nil {
+		return nil, err
+	}
+	res = new(ServerResponse)
+	err = json.Unmarshal(data, res)
+	if err != nil {
+		return nil, err
+	}
+	return res, nil
+}
+
+func (s *MarketClient) GetPublicRecentTrades(ctx context.Context, opts ...RequestOption) (res *ServerResponse, err error) {
+	if err = handlers.ValidateParams(s.params); err != nil {
+		return nil, err
+	}
+	r := &request{
+		method:   http.MethodGet,
+		endpoint: "/v5/market/recent-trade",
+		secType:  secTypeNone,
+	}
+	r.setParams(s.params)
+	data, err := s.c.callAPI(ctx, r, opts...)
+	if err != nil {
+		return nil, err
+	}
+	res = new(ServerResponse)
+	err = json.Unmarshal(data, res)
+	if err != nil {
+		return nil, err
+	}
+	return res, nil
+}
+
+func (s *MarketClient) GetOpenInterests(ctx context.Context, opts ...RequestOption) (res *ServerResponse, err error) {
+	if err = handlers.ValidateParams(s.params); err != nil {
+		return nil, err
+	}
+	r := &request{
+		method:   http.MethodGet,
+		endpoint: "/v5/market/open-interest",
+		secType:  secTypeNone,
+	}
+	r.setParams(s.params)
+	data, err := s.c.callAPI(ctx, r, opts...)
+	if err != nil {
+		return nil, err
+	}
+	res = new(ServerResponse)
+	err = json.Unmarshal(data, res)
+	if err != nil {
+		return nil, err
+	}
+	return res, nil
+}
+
+func (s *MarketClient) GetHistoricalVolatility(ctx context.Context, opts ...RequestOption) (res *ServerResponse, err error) {
+	if err = handlers.ValidateParams(s.params); err != nil {
+		return nil, err
+	}
+	r := &request{
+		method:   http.MethodGet,
+		endpoint: "/v5/market/historical-volatility",
+		secType:  secTypeNone,
+	}
+	r.setParams(s.params)
+	data, err := s.c.callAPI(ctx, r, opts...)
+	if err != nil {
+		return nil, err
+	}
+	res = new(ServerResponse)
+	err = json.Unmarshal(data, res)
+	if err != nil {
+		return nil, err
+	}
+	return res, nil
+}
+
+func (s *MarketClient) GetInsuranceInfo(ctx context.Context, opts ...RequestOption) (res *ServerResponse, err error) {
+	if err = handlers.ValidateParams(s.params); err != nil {
+		return nil, err
+	}
+	r := &request{
+		method:   http.MethodGet,
+		endpoint: "/v5/market/insurance",
+		secType:  secTypeNone,
+	}
+	r.setParams(s.params)
+	data, err := s.c.callAPI(ctx, r, opts...)
+	if err != nil {
+		return nil, err
+	}
+	res = new(ServerResponse)
+	err = json.Unmarshal(data, res)
+	if err != nil {
+		return nil, err
+	}
+	return res, nil
+}
+
+func (s *MarketClient) GetRiskLimit(ctx context.Context, opts ...RequestOption) (res *ServerResponse, err error) {
+	if err = handlers.ValidateParams(s.params); err != nil {
+		return nil, err
+	}
+	r := &request{
+		method:   http.MethodGet,
+		endpoint: "/v5/market/risk-limit",
+		secType:  secTypeNone,
+	}
+	r.setParams(s.params)
+	data, err := s.c.callAPI(ctx, r, opts...)
+	if err != nil {
+		return nil, err
+	}
+	res = new(ServerResponse)
+	err = json.Unmarshal(data, res)
+	if err != nil {
+		return nil, err
+	}
+	return res, nil
+}
+
+func (s *MarketClient) GetDeliveryPrice(ctx context.Context, opts ...RequestOption) (res *ServerResponse, err error) {
+	if err = handlers.ValidateParams(s.params); err != nil {
+		return nil, err
+	}
+	r := &request{
+		method:   http.MethodGet,
+		endpoint: "/v5/market/delivery-price",
+		secType:  secTypeNone,
+	}
+	r.setParams(s.params)
+	data, err := s.c.callAPI(ctx, r, opts...)
+	if err != nil {
+		return nil, err
+	}
+	res = new(ServerResponse)
+	err = json.Unmarshal(data, res)
+	if err != nil {
+		return nil, err
+	}
+	return res, nil
+}
+
+func (s *MarketClient) GetMarketLSRatio(ctx context.Context, opts ...RequestOption) (res *ServerResponse, err error) {
+	if err = handlers.ValidateParams(s.params); err != nil {
+		return nil, err
+	}
+	r := &request{
+		method:   http.MethodGet,
+		endpoint: "/v5/market/account-ratio",
+		secType:  secTypeNone,
+	}
+	r.setParams(s.params)
 	data, err := s.c.callAPI(ctx, r, opts...)
 	if err != nil {
 		return nil, err
