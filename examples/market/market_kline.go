@@ -7,18 +7,18 @@ import (
 )
 
 func main() {
-	ServerTime()
+	MarketKline()
 }
 
-func ServerTime() {
+func MarketKline() {
 
 	client := bybit.NewBybitHttpClient("", "")
 
 	// NewServerTimeService
-	serverTime, err := client.NewMarketInfoServiceNoParams().GetServerTime(context.Background())
+	marketKline, err := client.NewMarketKlineService("premium-index-price-kline", "linear", "BTCUSDT", "1").Limit(10).Do(context.Background())
 	if err != nil {
 		fmt.Println(err)
 		return
 	}
-	fmt.Println(bybit.PrettyPrint(serverTime))
+	fmt.Println(bybit.PrettyPrint(marketKline))
 }

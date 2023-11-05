@@ -5,15 +5,25 @@ import (
 	"context"
 	"crypto/hmac"
 	"crypto/sha256"
+	"encoding/hex"
 	"encoding/json"
 	"fmt"
-	handlers "github.com/wuhewuhe/bybit.go.api/handlers"
+	"github.com/wuhewuhe/bybit.go.api/handlers"
 	"io"
 	"log"
 	"net/http"
 	"os"
+	"strconv"
 	"time"
 )
+
+type ServerResponse struct {
+	RetCode    int         `json:"retCode"`
+	RetMsg     string      `json:"retMsg"`
+	Result     interface{} `json:"result"`
+	RetExtInfo struct{}    `json:"retExtInfo"`
+	Time       int64       `json:"time"`
+}
 
 // TimeInForceType define time in force type of order
 type TimeInForceType string
@@ -21,7 +31,7 @@ type TimeInForceType string
 // Client define API client
 type Client struct {
 	APIKey     string
-	SecretKey  string
+	APISecret  string
 	BaseURL    string
 	HTTPClient *http.Client
 	Debug      bool
@@ -39,19 +49,11 @@ func WithDebug(debug bool) ClientOption {
 	}
 }
 
+// WithBaseURL is a client option to set the base URL of the Bybit HTTP client.
 func WithBaseURL(baseURL string) ClientOption {
 	return func(c *Client) {
 		c.BaseURL = baseURL
 	}
-}
-
-func currentTimestamp() int64 {
-	return FormatTimestamp(time.Now())
-}
-
-// FormatTimestamp formats a time into Unix timestamp in milliseconds, as requested by Bybit.
-func FormatTimestamp(t time.Time) int64 {
-	return t.UnixNano() / int64(time.Millisecond)
 }
 
 type ServerResponse struct {
@@ -73,12 +75,19 @@ func (c *Client) debug(format string, v ...interface{}) {
 	}
 }
 
+func GetCurrentTime() int64 {
+	now := time.Now()
+	unixNano := now.UnixNano()
+	timeStamp := unixNano / int64(time.Millisecond)
+	return timeStamp
+}
+
 // NewBybitHttpClient NewClient Create client function for initialising new Bybit client
-func NewBybitHttpClient(apiKey string, secretKey string, options ...ClientOption) *Client {
+func NewBybitHttpClient(apiKey string, APISecret string, options ...ClientOption) *Client {
 	c := &Client{
 		APIKey:     apiKey,
-		SecretKey:  secretKey,
-		BaseURL:    "https://api.bybit.com",
+		APISecret:  APISecret,
+		BaseURL:    MAINNET,
 		HTTPClient: http.DefaultClient,
 		Logger:     log.New(os.Stderr, Name, log.LstdFlags),
 	}
@@ -104,49 +113,45 @@ func (c *Client) parseRequest(r *request, opts ...RequestOption) (err error) {
 	fullURL := fmt.Sprintf("%s%s", c.BaseURL, r.endpoint)
 
 	queryString := r.query.Encode()
-	body := &bytes.Buffer{}
-	bodyString := r.form.Encode()
 	header := http.Header{}
+	body := &bytes.Buffer{}
+	if r.params != nil {
+		body = bytes.NewBuffer(r.params)
+	}
 	if r.header != nil {
 		header = r.header.Clone()
 	}
 	header.Set("User-Agent", fmt.Sprintf("%s/%s", Name, Version))
-	if bodyString != "" {
-		header.Set("Content-Type", "application/json")
-		body = bytes.NewBufferString(bodyString)
-	}
+
 	if r.secType == secTypeSigned {
+		timeStamp := GetCurrentTime()
 		header.Set(signTypeKey, "2")
 		header.Set(apiRequestKey, c.APIKey)
-		header.Set(timestampKey, fmt.Sprintf("%d", currentTimestamp()))
+		header.Set(timestampKey, strconv.FormatInt(timeStamp, 10))
 		if r.recvWindow == "" {
-			header.Set(recvWindowKey, "5000")
+			r.recvWindow = "5000"
+		}
+		header.Set(recvWindowKey, r.recvWindow)
+
+		var signatureBase []byte
+		if r.method == "POST" {
+			header.Set("Content-Type", "application/json")
+			signatureBase = []byte(strconv.FormatInt(timeStamp, 10) + c.APIKey + r.recvWindow + string(r.params[:]))
 		} else {
-			header.Set(recvWindowKey, r.recvWindow)
+			signatureBase = []byte(strconv.FormatInt(timeStamp, 10) + c.APIKey + r.recvWindow + queryString)
 		}
-
-		var signatureBase string
-		if r.method == "GET" {
-			signatureBase = fmt.Sprintf("%d%s%s%s", FormatTimestamp(time.Now()), c.APIKey, r.recvWindow, queryString)
-		} else if r.method == "POST" {
-			signatureBase = fmt.Sprintf("%d%s%s%s", FormatTimestamp(time.Now()), c.APIKey, r.recvWindow, bodyString)
-		}
-
-		mac := hmac.New(sha256.New, []byte(c.SecretKey))
-		_, err = mac.Write([]byte(signatureBase))
-		if err != nil {
-			return err
-		}
-		signatureValue := fmt.Sprintf("%x", mac.Sum(nil))
-		header.Set(signatureKey, signatureValue)
+		hmac256 := hmac.New(sha256.New, []byte(c.APISecret))
+		hmac256.Write(signatureBase)
+		signature := hex.EncodeToString(hmac256.Sum(nil))
+		header.Set(signatureKey, signature)
 	}
 	if queryString != "" {
 		fullURL = fmt.Sprintf("%s?%s", fullURL, queryString)
 	}
-	c.debug("full url: %s, body: %s", fullURL, bodyString)
+	c.debug("full url: %s, body: %s", fullURL, body)
 	r.fullURL = fullURL
-	r.header = header
 	r.body = body
+	r.header = header
 	return nil
 }
 
@@ -196,7 +201,53 @@ func (c *Client) callAPI(ctx context.Context, r *request, opts ...RequestOption)
 	return data, nil
 }
 
-// NewServerTimeService Market Endpoints
-func (c *Client) NewServerTimeService() *ServerTime {
-	return &ServerTime{c: c}
+// NewMarketKlineService Market Endpoints
+func (c *Client) NewMarketKlineService(klineType, category, symbol, interval string) *Klines {
+	return &Klines{
+		c:         c,
+		category:  category,
+		symbol:    symbol,
+		interval:  interval,
+		klineType: klineType,
+	}
+}
+
+func (c *Client) NewMarketKLinesService(klineType string, params map[string]interface{}) *MarketClient {
+	return &MarketClient{
+		c:         c,
+		klineType: klineType,
+		params:    params,
+	}
+}
+
+func (c *Client) NewMarketInfoServiceNoParams() *MarketClient {
+	return &MarketClient{
+		c: c,
+	}
+}
+
+func (c *Client) NewMarketInfoService(params map[string]interface{}) *MarketClient {
+	return &MarketClient{
+		c:      c,
+		params: params,
+	}
+}
+
+// NewPlaceOrderService Trade Endpoints
+func (c *Client) NewPlaceOrderService(category, symbol, side, orderType, qty string) *Order {
+	return &Order{
+		c:         c,
+		category:  category,
+		symbol:    symbol,
+		side:      side,
+		orderType: orderType,
+		qty:       qty,
+	}
+}
+
+func (c *Client) NewPlaceTradeService(params map[string]interface{}) *Trade {
+	return &Trade{
+		c:      c,
+		params: params,
+	}
 }
