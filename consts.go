@@ -3,6 +3,10 @@ package bybit_connector
 const (
 	Name    = "bybit.api.go"
 	Version = "1.0.0"
+	// Https
+	MAINNET       = "https://api.bybit.com"
+	MAINNET_BACKT = "https://api.bytick.com"
+	TESTNET       = "https://api-testnet.bybit.com"
 	// WebSocket public channel - Mainnet
 	SPOT_MAINNET    = "wss://stream.bybit.com/v5/public/spot"
 	LINEAR_MAINNET  = "wss://stream.bybit.com/v5/public/linear"
@@ -29,5 +33,5 @@ const (
 	signatureKey  = "X-BAPI-SIGN"
 	apiRequestKey = "X-BAPI-API-KEY"
 	recvWindowKey = "X-BAPI-RECV-WINDOW"
-	signTypeKey   = "2"
+	signTypeKey   = "X-BAPI-SIGN-TYPE"
 )

@@ -1,8 +1,10 @@
 package bybit_connector
 
 import (
+	"encoding/json"
 	"fmt"
 	"io"
+	"log"
 	"net/http"
 	"net/url"
 )
@@ -21,12 +23,12 @@ type request struct {
 	method     string
 	endpoint   string
 	query      url.Values
-	form       url.Values
 	recvWindow string
 	secType    secType
 	header     http.Header
-	body       io.Reader
+	params     []byte
 	fullURL    string
+	body       io.Reader
 }
 
 // addParam add param with key/value to query string
@@ -47,11 +49,20 @@ func (r *request) setParam(key string, value interface{}) *request {
 	return r
 }
 
-// setParams set params with key/values to query string
+// setParams set params with key/values to query string or body
 func (r *request) setParams(m params) *request {
-	for k, v := range m {
-		r.setParam(k, v)
+	if r.method == http.MethodGet {
+		for k, v := range m {
+			r.setParam(k, v)
+		}
+	} else if r.method == http.MethodPost {
+		jsonData, err := json.Marshal(m)
+		if err != nil {
+			log.Fatal(err)
+		}
+		r.params = jsonData
 	}
+
 	return r
 }
 
@@ -59,13 +70,10 @@ func (r *request) validate() (err error) {
 	if r.query == nil {
 		r.query = url.Values{}
 	}
-	if r.form == nil {
-		r.form = url.Values{}
-	}
 	return nil
 }
 
-// Append `WithRecvWindow(insert_recvwindow)` to request to modify the default recvWindow value
+// WithRecvWindow Append `WithRecvWindow(insert_recvWindow)` to request to modify the default recvWindow value
 func WithRecvWindow(recvWindow string) RequestOption {
 	return func(r *request) {
 		r.recvWindow = recvWindow
