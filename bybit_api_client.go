@@ -255,3 +255,16 @@ func (c *Client) NewPreUpgradeService(params map[string]interface{}) *PreUpgrade
 		params: params,
 	}
 }
+
+func (c *Client) NewAccountService(params map[string]interface{}) *AccountClient {
+	return &AccountClient{
+		c:      c,
+		params: params,
+	}
+}
+
+func (c *Client) NewAccountServiceNoParams() *AccountClient {
+	return &AccountClient{
+		c: c,
+	}
+}
