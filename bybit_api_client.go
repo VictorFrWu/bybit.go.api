@@ -53,14 +53,6 @@ func WithBaseURL(baseURL string) ClientOption {
 	}
 }
 
-type ServerResponse struct {
-	RetCode    int         `json:"retCode"`
-	RetMsg     string      `json:"retMsg"`
-	Result     interface{} `json:"result"`
-	RetExtInfo struct{}    `json:"retExtInfo"`
-	Time       int64       `json:"time"`
-}
-
 func PrettyPrint(i interface{}) string {
 	s, _ := json.MarshalIndent(i, "", "\t")
 	return string(s)
@@ -242,9 +234,17 @@ func (c *Client) NewPlaceOrderService(category, symbol, side, orderType, qty str
 	}
 }
 
-func (c *Client) NewTradeService(params map[string]interface{}) *Trade {
-	return &Trade{
+func (c *Client) NewTradeService(params map[string]interface{}) *TradeClient {
+	return &TradeClient{
 		c:      c,
 		params: params,
 	}
+}
+
+func (c *Client) NewPositionService(params map[string]interface{}) *PositionClient {
+	return &PositionClient{
+		c:      c,
+		params: params,
+	}
+
 }
