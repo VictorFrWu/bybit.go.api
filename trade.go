@@ -8,12 +8,12 @@ import (
 	"net/http"
 )
 
-type Trade struct {
+type TradeClient struct {
 	c      *Client
 	params map[string]interface{}
 }
 
-func (s *Trade) PlaceOrder(ctx context.Context, opts ...RequestOption) (res *ServerResponse, err error) {
+func (s *TradeClient) PlaceOrder(ctx context.Context, opts ...RequestOption) (res *ServerResponse, err error) {
 	if err = handlers.ValidateParams(s.params); err != nil {
 		return nil, err
 	}
@@ -35,7 +35,7 @@ func (s *Trade) PlaceOrder(ctx context.Context, opts ...RequestOption) (res *Ser
 	return res, nil
 }
 
-func (s *Trade) AmendOrder(ctx context.Context, opts ...RequestOption) (res *ServerResponse, err error) {
+func (s *TradeClient) AmendOrder(ctx context.Context, opts ...RequestOption) (res *ServerResponse, err error) {
 	if err = handlers.ValidateParams(s.params); err != nil {
 		return nil, err
 	}
@@ -57,7 +57,7 @@ func (s *Trade) AmendOrder(ctx context.Context, opts ...RequestOption) (res *Ser
 	return res, nil
 }
 
-func (s *Trade) CancelOrder(ctx context.Context, opts ...RequestOption) (res *ServerResponse, err error) {
+func (s *TradeClient) CancelOrder(ctx context.Context, opts ...RequestOption) (res *ServerResponse, err error) {
 	if err = handlers.ValidateParams(s.params); err != nil {
 		return nil, err
 	}
@@ -79,7 +79,7 @@ func (s *Trade) CancelOrder(ctx context.Context, opts ...RequestOption) (res *Se
 	return res, nil
 }
 
-func (s *Trade) GetOpenOrders(ctx context.Context, opts ...RequestOption) (res *ServerResponse, err error) {
+func (s *TradeClient) GetOpenOrders(ctx context.Context, opts ...RequestOption) (res *ServerResponse, err error) {
 	if err = handlers.ValidateParams(s.params); err != nil {
 		return nil, err
 	}
@@ -101,7 +101,7 @@ func (s *Trade) GetOpenOrders(ctx context.Context, opts ...RequestOption) (res *
 	return res, nil
 }
 
-func (s *Trade) GetOrderHistory(ctx context.Context, opts ...RequestOption) (res *ServerResponse, err error) {
+func (s *TradeClient) GetOrderHistory(ctx context.Context, opts ...RequestOption) (res *ServerResponse, err error) {
 	if err = handlers.ValidateParams(s.params); err != nil {
 		return nil, err
 	}
@@ -123,7 +123,7 @@ func (s *Trade) GetOrderHistory(ctx context.Context, opts ...RequestOption) (res
 	return res, nil
 }
 
-func (s *Trade) GetSpotBorrowQuota(ctx context.Context, opts ...RequestOption) (res *ServerResponse, err error) {
+func (s *TradeClient) GetSpotBorrowQuota(ctx context.Context, opts ...RequestOption) (res *ServerResponse, err error) {
 	if err = handlers.ValidateParams(s.params); err != nil {
 		return nil, err
 	}
@@ -145,7 +145,7 @@ func (s *Trade) GetSpotBorrowQuota(ctx context.Context, opts ...RequestOption) (
 	return res, nil
 }
 
-func (s *Trade) CancelAllOrders(ctx context.Context, opts ...RequestOption) (res *ServerResponse, err error) {
+func (s *TradeClient) CancelAllOrders(ctx context.Context, opts ...RequestOption) (res *ServerResponse, err error) {
 	if err = handlers.ValidateParams(s.params); err != nil {
 		return nil, err
 	}
@@ -167,7 +167,7 @@ func (s *Trade) CancelAllOrders(ctx context.Context, opts ...RequestOption) (res
 	return res, nil
 }
 
-func (s *Trade) SetDisconnectCancelAll(ctx context.Context, opts ...RequestOption) (res *ServerResponse, err error) {
+func (s *TradeClient) SetDisconnectCancelAll(ctx context.Context, opts ...RequestOption) (res *ServerResponse, err error) {
 	if err = handlers.ValidateParams(s.params); err != nil {
 		return nil, err
 	}
@@ -189,7 +189,7 @@ func (s *Trade) SetDisconnectCancelAll(ctx context.Context, opts ...RequestOptio
 	return res, nil
 }
 
-func (s *Trade) PlaceBatchOrder(ctx context.Context, opts ...RequestOption) (res *models.BatchOrderServerResponse, err error) {
+func (s *TradeClient) PlaceBatchOrder(ctx context.Context, opts ...RequestOption) (res *models.BatchOrderServerResponse, err error) {
 	if err = handlers.ValidateParams(s.params); err != nil {
 		return nil, err
 	}
@@ -211,7 +211,7 @@ func (s *Trade) PlaceBatchOrder(ctx context.Context, opts ...RequestOption) (res
 	return res, nil
 }
 
-func (s *Trade) AmendBatchOrder(ctx context.Context, opts ...RequestOption) (res *models.BatchOrderServerResponse, err error) {
+func (s *TradeClient) AmendBatchOrder(ctx context.Context, opts ...RequestOption) (res *models.BatchOrderServerResponse, err error) {
 	if err = handlers.ValidateParams(s.params); err != nil {
 		return nil, err
 	}
@@ -233,7 +233,7 @@ func (s *Trade) AmendBatchOrder(ctx context.Context, opts ...RequestOption) (res
 	return res, nil
 }
 
-func (s *Trade) CancelBatchOrder(ctx context.Context, opts ...RequestOption) (res *models.BatchOrderServerResponse, err error) {
+func (s *TradeClient) CancelBatchOrder(ctx context.Context, opts ...RequestOption) (res *models.BatchOrderServerResponse, err error) {
 	if err = handlers.ValidateParams(s.params); err != nil {
 		return nil, err
 	}
