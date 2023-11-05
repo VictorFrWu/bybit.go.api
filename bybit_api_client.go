@@ -56,6 +56,14 @@ func WithBaseURL(baseURL string) ClientOption {
 	}
 }
 
+type ServerResponse struct {
+	RetCode    int         `json:"retCode"`
+	RetMsg     string      `json:"retMsg"`
+	Result     interface{} `json:"result"`
+	RetExtInfo struct{}    `json:"retExtInfo"`
+	Time       int64       `json:"time"`
+}
+
 func PrettyPrint(i interface{}) string {
 	s, _ := json.MarshalIndent(i, "", "\t")
 	return string(s)
