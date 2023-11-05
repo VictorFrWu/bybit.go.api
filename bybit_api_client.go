@@ -248,3 +248,10 @@ func (c *Client) NewPositionService(params map[string]interface{}) *PositionClie
 	}
 
 }
+
+func (c *Client) NewPreUpgradeService(params map[string]interface{}) *PreUpgradeClient {
+	return &PreUpgradeClient{
+		c:      c,
+		params: params,
+	}
+}
