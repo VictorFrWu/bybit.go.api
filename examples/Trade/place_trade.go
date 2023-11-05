@@ -13,7 +13,7 @@ func main() {
 func PlaceTrade() {
 	client := bybit.NewBybitHttpClient("8wYkmpLsMg10eNQyPm", "Ouxc34myDnXvei54XsBZgoQzfGxO4bkr2Zsj", bybit.WithBaseURL(bybit.TESTNET))
 	params := map[string]interface{}{"category": "linear", "symbol": "BTCUSDT", "side": "Buy", "positionIdx": 0, "orderType": "Limit", "qty": "0.001", "price": "10000", "timeInForce": "GTC"}
-	orderResult, err := client.NewPlaceTradeService(params).Do(context.Background())
+	orderResult, err := client.NewTradeService(params).PlaceOrder(context.Background())
 	if err != nil {
 		fmt.Println(err)
 		return
