@@ -268,3 +268,9 @@ func (c *Client) NewAccountServiceNoParams() *AccountClient {
 		c: c,
 	}
 }
+
+func (c *Client) NewAssetService(params map[string]interface{}) *AssetClient {
+	return &AssetClient{
+		c: c,
+	}
+}
