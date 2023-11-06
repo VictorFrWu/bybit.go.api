@@ -64,6 +64,11 @@ func (c *Client) debug(format string, v ...interface{}) {
 	}
 }
 
+// FormatTimestamp formats a time into Unix timestamp in milliseconds, as requested by Binance.
+func FormatTimestamp(t time.Time) int64 {
+	return t.UnixNano() / int64(time.Millisecond)
+}
+
 func GetCurrentTime() int64 {
 	now := time.Now()
 	unixNano := now.UnixNano()

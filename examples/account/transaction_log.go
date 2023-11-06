@@ -11,7 +11,7 @@ func main() {
 }
 
 func PlaceTrade() {
-	client := bybit.NewBybitHttpClient("8wYkmpLsMg10eNQyPm", "Ouxc34myDnXvei54XsBZgoQzfGxO4bkr2Zsj", bybit.WithBaseURL(bybit.TESTNET))
+	client := bybit.NewBybitHttpClient("YOUR_API_KEY", "YOUR_API_SECRET", bybit.WithBaseURL(bybit.TESTNET))
 	params := map[string]interface{}{"accountType": "UNIFIED", "category": "linear"}
 	accountResult, err := client.NewAccountService(params).GetTransactionLog(context.Background())
 	if err != nil {
