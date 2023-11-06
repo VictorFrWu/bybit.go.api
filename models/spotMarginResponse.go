@@ -59,3 +59,40 @@ type ClassicalSpotMarginLoanResult struct {
 	Status       int    `json:"status"`       // Use int for integer type
 	SwitchStatus int    `json:"switchStatus"` // Use int for integer type
 }
+
+type SpotMarginBorrowOrders struct {
+	List []struct {
+		AccountId       string `json:"accountId"`       // Account ID
+		Coin            string `json:"coin"`            // Coin name
+		CreatedTime     int64  `json:"createdTime"`     // Borrow order created timestamp (ms)
+		Id              string `json:"id"`              // Borrow order ID
+		InterestAmount  string `json:"interestAmount"`  // Total interest
+		InterestBalance string `json:"interestBalance"` // Outstanding interest
+		LoanAmount      string `json:"loanAmount"`      // Principal amount
+		LoanBalance     string `json:"loanBalance"`     // Outstanding principal
+		RemainAmount    string `json:"remainAmount"`    // Remaining debt = interestBalance + loanBalance
+		Status          int    `json:"status"`          // Status 1: uncleared, 2: cleared
+		Type            int    `json:"type"`            // Order Type 1: manual loan, 2: auto loan
+	} `json:"list"`
+}
+
+type SpotBorrowOrderResult struct {
+	TransactId string `json:"transactId"`
+}
+
+type SpotRepayOrderResult struct {
+	RepayId string `json:"repayId"`
+}
+
+type SpotToggleMarginResult struct {
+	SwitchStatus string `json:"switchStatus"`
+}
+
+type SpotMarginLeverageResult struct {
+	Leverage string `json:"leverage"`
+}
+
+type SpotMarginStateResult struct {
+	SpotLeverage   string `json:"spotLeverage"`
+	SpotMarginMode string `json:"spotMarginMode"`
+}
