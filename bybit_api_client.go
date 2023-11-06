@@ -302,3 +302,18 @@ func (c *Client) NewLendingServiceNoParams() *LendingServiceClient {
 		c: c,
 	}
 }
+
+func (c *Client) NewSpotLeverageService(params map[string]interface{}) *SpotLeverageClient {
+	return &SpotLeverageClient{
+		c:      c,
+		params: params,
+	}
+}
+
+func (c *Client) NewSpotMarginDataService(params map[string]interface{}, isUta bool) *SpotMarginClient {
+	return &SpotMarginClient{
+		c:      c,
+		isUta:  isUta,
+		params: params,
+	}
+}
