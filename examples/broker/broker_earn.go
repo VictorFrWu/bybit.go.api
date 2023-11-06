@@ -12,11 +12,11 @@ func main() {
 
 func PlaceTrade() {
 	client := bybit.NewBybitHttpClient("8wYkmpLsMg10eNQyPm", "Ouxc34myDnXvei54XsBZgoQzfGxO4bkr2Zsj", bybit.WithBaseURL(bybit.TESTNET))
-	params := map[string]interface{}{"username": "wuhe06112023Vic", "memberType": 1}
-	userResult, err := client.NewUserService(params).CreateSubMember(context.Background())
+	params := map[string]interface{}{}
+	orderResult, err := client.NewBrokerService(params).GetBrokerEarning(context.Background())
 	if err != nil {
 		fmt.Println(err)
 		return
 	}
-	fmt.Println(bybit.PrettyPrint(userResult))
+	fmt.Println(bybit.PrettyPrint(orderResult))
 }

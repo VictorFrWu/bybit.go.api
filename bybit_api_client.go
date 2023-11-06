@@ -274,3 +274,21 @@ func (c *Client) NewAssetService(params map[string]interface{}) *AssetClient {
 		c: c,
 	}
 }
+
+func (c *Client) NewUserService(params map[string]interface{}) *UserServiceClient {
+	return &UserServiceClient{
+		c: c,
+	}
+}
+
+func (c *Client) NewBrokerService(params map[string]interface{}) *BrokerServiceClient {
+	return &BrokerServiceClient{
+		c: c,
+	}
+}
+
+func (c *Client) NewLendingService(params map[string]interface{}) *LendingServiceClient {
+	return &LendingServiceClient{
+		c: c,
+	}
+}
