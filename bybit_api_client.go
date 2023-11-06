@@ -271,23 +271,33 @@ func (c *Client) NewAccountServiceNoParams() *AccountClient {
 
 func (c *Client) NewAssetService(params map[string]interface{}) *AssetClient {
 	return &AssetClient{
-		c: c,
+		c:      c,
+		params: params,
 	}
 }
 
 func (c *Client) NewUserService(params map[string]interface{}) *UserServiceClient {
 	return &UserServiceClient{
-		c: c,
+		c:      c,
+		params: params,
 	}
 }
 
 func (c *Client) NewBrokerService(params map[string]interface{}) *BrokerServiceClient {
 	return &BrokerServiceClient{
-		c: c,
+		c:      c,
+		params: params,
 	}
 }
 
 func (c *Client) NewLendingService(params map[string]interface{}) *LendingServiceClient {
+	return &LendingServiceClient{
+		c:      c,
+		params: params,
+	}
+}
+
+func (c *Client) NewLendingServiceNoParams() *LendingServiceClient {
 	return &LendingServiceClient{
 		c: c,
 	}
