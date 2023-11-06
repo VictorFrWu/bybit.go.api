@@ -113,7 +113,7 @@ type MarginToken struct {
 	TokenInfo []TokenInfo `json:"tokenInfo"`
 }
 
-// LoanInfo To do
+// LoanInfo To do repay & loand to value
 type LoanInfo struct {
 	OrderId               string   `json:"orderId"`
 	OrderProductId        string   `json:"orderProductId"`
