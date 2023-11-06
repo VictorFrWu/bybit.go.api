@@ -7,7 +7,6 @@
 - [Usage](#usage)
 - [Contact](#contact)
 - [Contributors](#contributors)
-- [Donations](#donations)
 ## About
 The Official Go Lang API connector for Bybit's HTTP and WebSocket APIs.
 
@@ -24,7 +23,7 @@ Dive into a plethora of functionalities:
 
 bybit-go-api provides an official, robust, and high-performance go connector to Bybit's trading APIs.
 
-Initially conceptualized by esteemed go developer Victor, this module is now maintained by Bybit's in-house go experts.
+Initially conceptualized by go developer Victor, this module is now maintained by Bybit's in-house go experts.
 
 Your contributions are most welcome!
 
@@ -177,6 +176,3 @@ List of other contributors
     </td>
   </tr>
 </table>
-
-## Donations
-Your donations keep our development active and our community growing. Donate USDT to our [ERC20 Wallet Address](0x238bbb45af1254e2fd76564c9b56042c452f3d6e).
