@@ -288,6 +288,12 @@ func (c *Client) NewUserService(params map[string]interface{}) *UserServiceClien
 	}
 }
 
+func (c *Client) NewUserServiceNoParams() *UserServiceClient {
+	return &UserServiceClient{
+		c: c,
+	}
+}
+
 func (c *Client) NewBrokerService(params map[string]interface{}) *BrokerServiceClient {
 	return &BrokerServiceClient{
 		c:      c,

@@ -193,7 +193,7 @@ func (s *UserServiceClient) GetSubUidList(ctx context.Context, opts ...RequestOp
 		return nil, err
 	}
 	r := &request{
-		method:   http.MethodPost,
+		method:   http.MethodGet,
 		endpoint: "/v5/user/query-sub-members",
 		secType:  secTypeSigned,
 	}
@@ -211,15 +211,11 @@ func (s *UserServiceClient) GetSubUidList(ctx context.Context, opts ...RequestOp
 }
 
 func (s *UserServiceClient) GetAPIKeyInfo(ctx context.Context, opts ...RequestOption) (res *ServerResponse, err error) {
-	if err = handlers.ValidateParams(s.params); err != nil {
-		return nil, err
-	}
 	r := &request{
-		method:   http.MethodPost,
+		method:   http.MethodGet,
 		endpoint: "/v5/user/query-api",
 		secType:  secTypeSigned,
 	}
-	r.setParams(s.params)
 	data, err := s.c.callAPI(ctx, r, opts...)
 	if err != nil {
 		return nil, err
@@ -237,7 +233,7 @@ func (s *UserServiceClient) GetUidWalletType(ctx context.Context, opts ...Reques
 		return nil, err
 	}
 	r := &request{
-		method:   http.MethodPost,
+		method:   http.MethodGet,
 		endpoint: "/v5/user/get-member-type",
 		secType:  secTypeSigned,
 	}
@@ -259,7 +255,7 @@ func (s *UserServiceClient) GetAffiliateUserInfo(ctx context.Context, opts ...Re
 		return nil, err
 	}
 	r := &request{
-		method:   http.MethodPost,
+		method:   http.MethodGet,
 		endpoint: "/v5/user/aff-customer-info",
 		secType:  secTypeSigned,
 	}

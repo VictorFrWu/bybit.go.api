@@ -7,13 +7,12 @@ import (
 )
 
 func main() {
-	CreateNewSubUser()
+	GetApiKeyInfo()
 }
 
-func CreateNewSubUser() {
+func GetApiKeyInfo() {
 	client := bybit.NewBybitHttpClient("YOUR_API_KEY", "YOUR_API_SECRET", bybit.WithBaseURL(bybit.TESTNET))
-	params := map[string]interface{}{"username": "06112023Victor", "memberType": 1}
-	userResult, err := client.NewUserService(params).CreateSubMember(context.Background())
+	userResult, err := client.NewUserServiceNoParams().GetAPIKeyInfo(context.Background())
 	if err != nil {
 		fmt.Println(err)
 		return
