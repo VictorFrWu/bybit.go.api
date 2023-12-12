@@ -36,31 +36,68 @@ func (b *WebSocket) SetMessageHandler(handler MessageHandler) {
 }
 
 type WebSocket struct {
-	conn      *websocket.Conn
-	url       string
-	apiKey    string
-	apiSecret string
-	onMessage MessageHandler
+	conn         *websocket.Conn
+	url          string
+	apiKey       string
+	apiSecret    string
+	maxAliveTime string
+	pingInterval int
+	onMessage    MessageHandler
 }
 
-func NewBybitPrivateWebSocket(url, apiKey, apiSecret string, handler MessageHandler) *WebSocket {
-	return &WebSocket{
-		url:       url,
-		apiKey:    apiKey,
-		apiSecret: apiSecret,
-		onMessage: handler,
+type WebsocketOption func(*WebSocket)
+
+func WithPingInterval(pingInterval int) WebsocketOption {
+	return func(c *WebSocket) {
+		c.pingInterval = pingInterval
 	}
 }
 
-func NewBybitPublicWebSocket(url string, handler MessageHandler) *WebSocket {
-	return &WebSocket{
-		url:       url,
-		onMessage: handler,
+func WithMaxAliveTime(maxAliveTime string) WebsocketOption {
+	return func(c *WebSocket) {
+		c.maxAliveTime = maxAliveTime
 	}
+}
+
+func NewBybitPrivateWebSocket(url, apiKey, apiSecret string, handler MessageHandler, options ...WebsocketOption) *WebSocket {
+	c := &WebSocket{
+		url:          url,
+		apiKey:       apiKey,
+		apiSecret:    apiSecret,
+		maxAliveTime: "",
+		pingInterval: 20,
+		onMessage:    handler,
+	}
+
+	// Apply the provided options
+	for _, opt := range options {
+		opt(c)
+	}
+
+	return c
+}
+
+func NewBybitPublicWebSocket(url string, pingInterval int, handler MessageHandler, options ...WebsocketOption) *WebSocket {
+	c := &WebSocket{
+		url:          url,
+		pingInterval: pingInterval, // default is 20 seconds
+		onMessage:    handler,
+	}
+
+	// Apply the provided options
+	for _, opt := range options {
+		opt(c)
+	}
+
+	return c
 }
 
 func (b *WebSocket) Connect(args []string) error {
 	var err error
+	wssUrl := b.url
+	if b.maxAliveTime != "" {
+		wssUrl += "?max_alive_time=" + b.maxAliveTime
+	}
 	b.conn, _, err = websocket.DefaultDialer.Dial(b.url, nil)
 	if err != nil {
 		return err
@@ -80,7 +117,7 @@ func (b *WebSocket) Connect(args []string) error {
 }
 
 func Ping(b *WebSocket) {
-	ticker := time.NewTicker(15 * time.Second)
+	ticker := time.NewTicker(time.Duration(b.pingInterval) * time.Second)
 	go func() {
 		defer ticker.Stop() // Ensure the ticker is stopped when this goroutine ends
 		for {
@@ -123,7 +160,7 @@ func (b *WebSocket) sendAuth() error {
 	fmt.Println("signature generated : " + signature)
 
 	authMessage := map[string]interface{}{
-		"req_id": uuid.New(), // You would need to implement or find a package for generating GUID
+		"req_id": uuid.New(),
 		"op":     "auth",
 		"args":   []interface{}{b.apiKey, expires, signature},
 	}

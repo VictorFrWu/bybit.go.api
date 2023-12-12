@@ -180,6 +180,24 @@ func (s *AccountClient) GetMMPState(ctx context.Context, opts ...RequestOption) 
 	return res, nil
 }
 
+func (s *AccountClient) SetSpotHedgeMode(ctx context.Context, opts ...RequestOption) (res *ServerResponse, err error) {
+	r := &request{
+		method:   http.MethodGet,
+		endpoint: "/v5/account/set-hedging-mode",
+		secType:  secTypeSigned,
+	}
+	data, err := s.c.callAPI(ctx, r, opts...)
+	if err != nil {
+		return nil, err
+	}
+	res = new(ServerResponse)
+	err = json.Unmarshal(data, res)
+	if err != nil {
+		return nil, err
+	}
+	return res, nil
+}
+
 func (s *AccountClient) UpgradeToUTA(ctx context.Context, opts ...RequestOption) (res *ServerResponse, err error) {
 	r := &request{
 		method:   http.MethodPost,

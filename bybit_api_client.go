@@ -40,6 +40,7 @@ type doFunc func(req *http.Request) (*http.Response, error)
 
 type ClientOption func(*Client)
 
+// WithDebug print more details in debug mode
 func WithDebug(debug bool) ClientOption {
 	return func(c *Client) {
 		c.Debug = debug
