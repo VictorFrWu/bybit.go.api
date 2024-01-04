@@ -6,16 +6,20 @@ import (
 	"crypto/hmac"
 	"crypto/sha256"
 	"encoding/hex"
-	"encoding/json"
 	"fmt"
-	"github.com/wuhewuhe/bybit.go.api/handlers"
 	"io"
 	"log"
 	"net/http"
 	"os"
 	"strconv"
 	"time"
+
+	"github.com/bitly/go-simplejson"
+	jsoniter "github.com/json-iterator/go"
+	"github.com/wuhewuhe/bybit.go.api/handlers"
 )
+
+var json = jsoniter.ConfigCompatibleWithStandardLibrary
 
 type ServerResponse struct {
 	RetCode    int         `json:"retCode"`
@@ -75,6 +79,14 @@ func GetCurrentTime() int64 {
 	unixNano := now.UnixNano()
 	timeStamp := unixNano / int64(time.Millisecond)
 	return timeStamp
+}
+
+func newJSON(data []byte) (j *simplejson.Json, err error) {
+	j, err = simplejson.NewJson(data)
+	if err != nil {
+		return nil, err
+	}
+	return j, nil
 }
 
 // NewBybitHttpClient NewClient Create client function for initialising new Bybit client
@@ -152,6 +164,9 @@ func (c *Client) parseRequest(r *request, opts ...RequestOption) (err error) {
 
 func (c *Client) callAPI(ctx context.Context, r *request, opts ...RequestOption) (data []byte, err error) {
 	err = c.parseRequest(r, opts...)
+	if err != nil {
+		return nil, err
+	}
 	req, err := http.NewRequest(r.method, r.fullURL, r.body)
 	if err != nil {
 		return []byte{}, err
@@ -196,36 +211,79 @@ func (c *Client) callAPI(ctx context.Context, r *request, opts ...RequestOption)
 	return data, nil
 }
 
-// NewMarketKlineService Market Endpoints
-func (c *Client) NewMarketKlineService(klineType, category, symbol, interval string) *Klines {
-	return &Klines{
-		c:         c,
-		category:  category,
-		symbol:    symbol,
-		interval:  interval,
-		klineType: klineType,
-	}
+func (c *Client) NewInstrumentsInfoService() *InstrumentsInfoService {
+	return &InstrumentsInfoService{c: c}
 }
 
-func (c *Client) NewMarketKLinesService(klineType string, params map[string]interface{}) *MarketClient {
-	return &MarketClient{
-		c:         c,
-		klineType: klineType,
-		params:    params,
-	}
+// NewMarketKlineService Market Kline Endpoints
+func (c *Client) NewMarketKlineService() *MarketKlinesService {
+	return &MarketKlinesService{c: c}
 }
 
-func (c *Client) NewMarketInfoServiceNoParams() *MarketClient {
-	return &MarketClient{
-		c: c,
-	}
+// NewMarketMarkPriceKlineService Market Mark Price Kline Endpoints
+func (c *Client) NewMarketMarkPriceKlineService() *MarketMarkPriceKlineService {
+	return &MarketMarkPriceKlineService{c: c}
 }
 
-func (c *Client) NewMarketInfoService(params map[string]interface{}) *MarketClient {
-	return &MarketClient{
-		c:      c,
-		params: params,
-	}
+// NewMarketIndexPriceKlineService Market Index Price Kline Endpoints
+func (c *Client) NewMarketIndexPriceKlineService() *MarketIndexPriceKlineService {
+	return &MarketIndexPriceKlineService{c: c}
+}
+
+// NewMarketPremiumIndexPriceKlineService Market Premium Index Price Kline Endpoints
+func (c *Client) NewMarketPremiumIndexPriceKlineService() *MarketPremiumIndexPriceKlineService {
+	return &MarketPremiumIndexPriceKlineService{c: c}
+}
+
+func (c *Client) NewOrderBookService() *MarketOrderBookService {
+	return &MarketOrderBookService{c: c}
+}
+
+func (c *Client) NewTickersService() *MarketTickersService {
+	return &MarketTickersService{c: c}
+}
+
+func (c *Client) NewFundingTatesService() *MarketFundingRatesService {
+	return &MarketFundingRatesService{c: c}
+}
+
+func (c *Client) NewGetPublicRecentTradesService() *GetPublicRecentTradesService {
+	return &GetPublicRecentTradesService{c: c}
+}
+
+// GetOpenInterestsServicdde
+func (c *Client) NewGetOpenInterestsService() *GetOpenInterestsService {
+	return &GetOpenInterestsService{c: c}
+}
+
+// GetHistoricalVolatilityService
+func (c *Client) NewGetHistoricalVolatilityService() *GetHistoricalVolatilityService {
+	return &GetHistoricalVolatilityService{c: c}
+}
+
+// GetInsuranceInfoService
+func (c *Client) NewGetInsuranceInfoService() *GetInsuranceInfoService {
+	return &GetInsuranceInfoService{c: c}
+}
+
+// GetRiskLimitService
+func (c *Client) NewGetRiskLimitService() *GetRiskLimitService {
+	return &GetRiskLimitService{c: c}
+}
+
+// GetDeliveryPriceService
+func (c *Client) NewGetDeliveryPriceService() *GetDeliveryPriceService {
+	return &GetDeliveryPriceService{c: c}
+}
+
+// GetMarketLSRatioService
+func (c *Client) NewGetMarketLSRatioService() *GetMarketLSRatioService {
+	return &GetMarketLSRatioService{c: c}
+}
+
+// GetServerTimeService
+func (c *Client) NewGetServerTimeService() *GetServerTimeService {
+	return &GetServerTimeService{c: c}
 }
 
 // NewPlaceOrderService Trade Endpoints
