@@ -1,7 +1,6 @@
 package bybit_connector
 
 import (
-	"encoding/json"
 	"fmt"
 	"io"
 	"log"

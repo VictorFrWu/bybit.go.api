@@ -2,7 +2,6 @@ package bybit_connector
 
 import (
 	"context"
-	"encoding/json"
 	"github.com/wuhewuhe/bybit.go.api/handlers"
 	"github.com/wuhewuhe/bybit.go.api/models"
 	"net/http"
