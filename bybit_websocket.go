@@ -1,14 +1,15 @@
 package bybit_connector
 
 import (
+	"context"
 	"crypto/hmac"
 	"crypto/sha256"
 	"encoding/hex"
-	"encoding/json"
 	"fmt"
+	"time"
+
 	"github.com/google/uuid"
 	"github.com/gorilla/websocket"
-	"time"
 )
 
 type MessageHandler func(message string) error
@@ -43,6 +44,8 @@ type WebSocket struct {
 	maxAliveTime string
 	pingInterval int
 	onMessage    MessageHandler
+	ctx          context.Context
+	cancel       context.CancelFunc
 }
 
 type WebsocketOption func(*WebSocket)
@@ -111,6 +114,7 @@ func (b *WebSocket) Connect(args []string) error {
 
 	go b.handleIncomingMessages()
 
+	b.ctx, b.cancel = context.WithCancel(context.Background())
 	Ping(b)
 
 	return b.sendSubscription(args)
@@ -126,12 +130,16 @@ func Ping(b *WebSocket) {
 				if err := b.conn.WriteMessage(websocket.PingMessage, nil); err != nil {
 					fmt.Println("Failed to send ping:", err)
 				}
+			case <-b.ctx.Done():
+				fmt.Println("Exit ping")
+				return
 			}
 		}
 	}()
 }
 
 func (b *WebSocket) Disconnect() error {
+	b.cancel()
 	return b.conn.Close()
 }
 
