@@ -59,7 +59,7 @@ func WithBaseURL(baseURL string) ClientOption {
 }
 
 func PrettyPrint(i interface{}) string {
-	s, _ := json.MarshalIndent(i, "", "\t")
+	s, _ := json.MarshalIndent(i, "", " ")
 	return string(s)
 }
 
