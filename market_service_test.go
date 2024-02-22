@@ -412,7 +412,7 @@ func (s *marketTestSuite) TestInstrumentsInfo() {
 	category := models.CategoryInverse
 	symbol := "BTCUSD"
 	status := models.SymbolStatusTrading
-	baseÇoin := "BTC"
+	baseCoin := "BTC"
 	limit := 10
 	cursor := "cursor"
 	s.assertReq(func(r *request) {
@@ -422,7 +422,7 @@ func (s *marketTestSuite) TestInstrumentsInfo() {
 			"category": category,
 			"symbol":   symbol,
 			"status":   status,
-			"baseCoin": baseÇoin,
+			"baseCoin": baseCoin,
 			"limit":    limit,
 			"cursor":   cursor,
 		})
@@ -431,7 +431,7 @@ func (s *marketTestSuite) TestInstrumentsInfo() {
 
 	res, err := s.client.NewInstrumentsInfoService().
 		Category(category).Symbol(symbol).Status(status).
-		BaseCoin(baseÇoin).Limit(limit).Cursor(cursor).
+		BaseCoin(baseCoin).Limit(limit).Cursor(cursor).
 		Do(newContext())
 
 	e1 := &models.InstrumentInfoResponse{

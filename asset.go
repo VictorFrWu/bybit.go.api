@@ -2,6 +2,7 @@ package bybit_connector
 
 import (
 	"context"
+	"github.com/wuhewuhe/bybit.go.api/handlers"
 	"net/http"
 )
 
@@ -16,6 +17,7 @@ func (s *AssetClient) GetAssetOrderRecord(ctx context.Context, opts ...RequestOp
 		endpoint: "/v5/asset/exchange/order-record",
 		secType:  secTypeSigned,
 	}
+	r.setParams(s.params)
 	data, err := s.c.callAPI(ctx, r, opts...)
 	if err != nil {
 		return nil, err
@@ -34,6 +36,7 @@ func (s *AssetClient) GetAssetInfo(ctx context.Context, opts ...RequestOption) (
 		endpoint: "/v5/asset/transfer/query-asset-info",
 		secType:  secTypeSigned,
 	}
+	r.setParams(s.params)
 	data, err := s.c.callAPI(ctx, r, opts...)
 	if err != nil {
 		return nil, err
@@ -52,6 +55,7 @@ func (s *AssetClient) GetDeliveryRecord(ctx context.Context, opts ...RequestOpti
 		endpoint: "/v5/asset/delivery-record",
 		secType:  secTypeSigned,
 	}
+	r.setParams(s.params)
 	data, err := s.c.callAPI(ctx, r, opts...)
 	if err != nil {
 		return nil, err
@@ -70,6 +74,7 @@ func (s *AssetClient) GetUsdcSettlement(ctx context.Context, opts ...RequestOpti
 		endpoint: "/v5/asset/settlement-record",
 		secType:  secTypeSigned,
 	}
+	r.setParams(s.params)
 	data, err := s.c.callAPI(ctx, r, opts...)
 	if err != nil {
 		return nil, err
@@ -88,6 +93,7 @@ func (s *AssetClient) GetAllCoinsBalance(ctx context.Context, opts ...RequestOpt
 		endpoint: "/v5/asset/transfer/query-account-coins-balance",
 		secType:  secTypeSigned,
 	}
+	r.setParams(s.params)
 	data, err := s.c.callAPI(ctx, r, opts...)
 	if err != nil {
 		return nil, err
@@ -101,11 +107,15 @@ func (s *AssetClient) GetAllCoinsBalance(ctx context.Context, opts ...RequestOpt
 }
 
 func (s *AssetClient) GetSingleCoinsBalance(ctx context.Context, opts ...RequestOption) (res *ServerResponse, err error) {
+	if err = handlers.ValidateParams(s.params); err != nil {
+		return nil, err
+	}
 	r := &request{
 		method:   http.MethodGet,
 		endpoint: "/v5/asset/transfer/query-account-coin-balance",
 		secType:  secTypeSigned,
 	}
+	r.setParams(s.params)
 	data, err := s.c.callAPI(ctx, r, opts...)
 	if err != nil {
 		return nil, err
@@ -119,11 +129,15 @@ func (s *AssetClient) GetSingleCoinsBalance(ctx context.Context, opts ...Request
 }
 
 func (s *AssetClient) GetTransferableCoin(ctx context.Context, opts ...RequestOption) (res *ServerResponse, err error) {
+	if err = handlers.ValidateParams(s.params); err != nil {
+		return nil, err
+	}
 	r := &request{
 		method:   http.MethodGet,
 		endpoint: "/v5/asset/transfer/query-transfer-coin-list",
 		secType:  secTypeSigned,
 	}
+	r.setParams(s.params)
 	data, err := s.c.callAPI(ctx, r, opts...)
 	if err != nil {
 		return nil, err
@@ -137,11 +151,15 @@ func (s *AssetClient) GetTransferableCoin(ctx context.Context, opts ...RequestOp
 }
 
 func (s *AssetClient) CreateInternalTransfer(ctx context.Context, opts ...RequestOption) (res *ServerResponse, err error) {
+	if err = handlers.ValidateParams(s.params); err != nil {
+		return nil, err
+	}
 	r := &request{
 		method:   http.MethodPost,
 		endpoint: "/v5/asset/transfer/inter-transfer",
 		secType:  secTypeSigned,
 	}
+	r.setParams(s.params)
 	data, err := s.c.callAPI(ctx, r, opts...)
 	if err != nil {
 		return nil, err
@@ -155,11 +173,15 @@ func (s *AssetClient) CreateInternalTransfer(ctx context.Context, opts ...Reques
 }
 
 func (s *AssetClient) CreateUniversalTransfer(ctx context.Context, opts ...RequestOption) (res *ServerResponse, err error) {
+	if err = handlers.ValidateParams(s.params); err != nil {
+		return nil, err
+	}
 	r := &request{
 		method:   http.MethodPost,
 		endpoint: "/v5/asset/transfer/universal-transfer",
 		secType:  secTypeSigned,
 	}
+	r.setParams(s.params)
 	data, err := s.c.callAPI(ctx, r, opts...)
 	if err != nil {
 		return nil, err
@@ -173,11 +195,15 @@ func (s *AssetClient) CreateUniversalTransfer(ctx context.Context, opts ...Reque
 }
 
 func (s *AssetClient) SetDepositAccount(ctx context.Context, opts ...RequestOption) (res *ServerResponse, err error) {
+	if err = handlers.ValidateParams(s.params); err != nil {
+		return nil, err
+	}
 	r := &request{
 		method:   http.MethodPost,
 		endpoint: "/v5/asset/deposit/deposit-to-account",
 		secType:  secTypeSigned,
 	}
+	r.setParams(s.params)
 	data, err := s.c.callAPI(ctx, r, opts...)
 	if err != nil {
 		return nil, err
@@ -191,11 +217,15 @@ func (s *AssetClient) SetDepositAccount(ctx context.Context, opts ...RequestOpti
 }
 
 func (s *AssetClient) WithdrawAsset(ctx context.Context, opts ...RequestOption) (res *ServerResponse, err error) {
+	if err = handlers.ValidateParams(s.params); err != nil {
+		return nil, err
+	}
 	r := &request{
 		method:   http.MethodPost,
 		endpoint: "/v5/asset/withdraw/create",
 		secType:  secTypeSigned,
 	}
+	r.setParams(s.params)
 	data, err := s.c.callAPI(ctx, r, opts...)
 	if err != nil {
 		return nil, err
@@ -209,11 +239,15 @@ func (s *AssetClient) WithdrawAsset(ctx context.Context, opts ...RequestOption) 
 }
 
 func (s *AssetClient) CancelWithdrawAsset(ctx context.Context, opts ...RequestOption) (res *ServerResponse, err error) {
+	if err = handlers.ValidateParams(s.params); err != nil {
+		return nil, err
+	}
 	r := &request{
 		method:   http.MethodPost,
 		endpoint: "/v5/asset/withdraw/cancel",
 		secType:  secTypeSigned,
 	}
+	r.setParams(s.params)
 	data, err := s.c.callAPI(ctx, r, opts...)
 	if err != nil {
 		return nil, err
@@ -227,11 +261,15 @@ func (s *AssetClient) CancelWithdrawAsset(ctx context.Context, opts ...RequestOp
 }
 
 func (s *AssetClient) GetInternalTransfer(ctx context.Context, opts ...RequestOption) (res *ServerResponse, err error) {
+	if err = handlers.ValidateParams(s.params); err != nil {
+		return nil, err
+	}
 	r := &request{
 		method:   http.MethodGet,
 		endpoint: "/v5/asset/transfer/query-inter-transfer-list",
 		secType:  secTypeSigned,
 	}
+	r.setParams(s.params)
 	data, err := s.c.callAPI(ctx, r, opts...)
 	if err != nil {
 		return nil, err
@@ -250,6 +288,7 @@ func (s *AssetClient) GetUniversalTransfer(ctx context.Context, opts ...RequestO
 		endpoint: "/v5/asset/transfer/query-universal-transfer-list",
 		secType:  secTypeSigned,
 	}
+	r.setParams(s.params)
 	data, err := s.c.callAPI(ctx, r, opts...)
 	if err != nil {
 		return nil, err
@@ -268,6 +307,7 @@ func (s *AssetClient) GetSubUids(ctx context.Context, opts ...RequestOption) (re
 		endpoint: "/v5/asset/transfer/query-sub-member-list",
 		secType:  secTypeSigned,
 	}
+	r.setParams(s.params)
 	data, err := s.c.callAPI(ctx, r, opts...)
 	if err != nil {
 		return nil, err
@@ -286,6 +326,7 @@ func (s *AssetClient) GetAllowedDepositCoin(ctx context.Context, opts ...Request
 		endpoint: "/v5/asset/deposit/query-allowed-list",
 		secType:  secTypeSigned,
 	}
+	r.setParams(s.params)
 	data, err := s.c.callAPI(ctx, r, opts...)
 	if err != nil {
 		return nil, err
@@ -304,6 +345,7 @@ func (s *AssetClient) GetDepositRecords(ctx context.Context, opts ...RequestOpti
 		endpoint: "/v5/asset/deposit/query-record",
 		secType:  secTypeSigned,
 	}
+	r.setParams(s.params)
 	data, err := s.c.callAPI(ctx, r, opts...)
 	if err != nil {
 		return nil, err
@@ -322,6 +364,7 @@ func (s *AssetClient) GetSubDepositRecords(ctx context.Context, opts ...RequestO
 		endpoint: "/v5/asset/deposit/query-sub-member-record",
 		secType:  secTypeSigned,
 	}
+	r.setParams(s.params)
 	data, err := s.c.callAPI(ctx, r, opts...)
 	if err != nil {
 		return nil, err
@@ -340,6 +383,7 @@ func (s *AssetClient) GetInternalDepositRecords(ctx context.Context, opts ...Req
 		endpoint: "/v5/asset/deposit/query-internal-record",
 		secType:  secTypeSigned,
 	}
+	r.setParams(s.params)
 	data, err := s.c.callAPI(ctx, r, opts...)
 	if err != nil {
 		return nil, err
@@ -358,6 +402,7 @@ func (s *AssetClient) GetMasterDepositAddress(ctx context.Context, opts ...Reque
 		endpoint: "/v5/asset/deposit/query-address",
 		secType:  secTypeSigned,
 	}
+	r.setParams(s.params)
 	data, err := s.c.callAPI(ctx, r, opts...)
 	if err != nil {
 		return nil, err
@@ -376,6 +421,7 @@ func (s *AssetClient) GetSubDepositAddress(ctx context.Context, opts ...RequestO
 		endpoint: "/v5/asset/deposit/query-sub-member-address",
 		secType:  secTypeSigned,
 	}
+	r.setParams(s.params)
 	data, err := s.c.callAPI(ctx, r, opts...)
 	if err != nil {
 		return nil, err
@@ -394,6 +440,7 @@ func (s *AssetClient) GetCoinInfo(ctx context.Context, opts ...RequestOption) (r
 		endpoint: "/v5/asset/coin/query-info",
 		secType:  secTypeSigned,
 	}
+	r.setParams(s.params)
 	data, err := s.c.callAPI(ctx, r, opts...)
 	if err != nil {
 		return nil, err
@@ -412,6 +459,7 @@ func (s *AssetClient) GetWithdrawalAmount(ctx context.Context, opts ...RequestOp
 		endpoint: "/v5/asset/withdraw/withdrawable-amount",
 		secType:  secTypeSigned,
 	}
+	r.setParams(s.params)
 	data, err := s.c.callAPI(ctx, r, opts...)
 	if err != nil {
 		return nil, err
@@ -429,6 +477,7 @@ func (s *AssetClient) GetWithdrawalRecords(ctx context.Context, opts ...RequestO
 		endpoint: "/v5/asset/withdraw/query-record",
 		secType:  secTypeSigned,
 	}
+	r.setParams(s.params)
 	data, err := s.c.callAPI(ctx, r, opts...)
 	if err != nil {
 		return nil, err
