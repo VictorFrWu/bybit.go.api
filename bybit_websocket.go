@@ -73,6 +73,7 @@ type WebSocket struct {
 	ctx          context.Context
 	cancel       context.CancelFunc
 	isConnected  bool
+	isPrivate    bool
 }
 
 type WebsocketOption func(*WebSocket)
@@ -97,6 +98,7 @@ func NewBybitPrivateWebSocket(url, apiKey, apiSecret string, handler MessageHand
 		maxAliveTime: "",
 		pingInterval: 20,
 		onMessage:    handler,
+		isPrivate:    true,
 	}
 
 	// Apply the provided options
@@ -216,7 +218,7 @@ func (b *WebSocket) Disconnect() error {
 
 func (b *WebSocket) requiresAuthentication() bool {
 	return b.url == WEBSOCKET_PRIVATE_MAINNET ||
-		b.url == WEBSOCKET_PRIVATE_TESTNET || b.url == WEBSOCKET_TRADE_MAINNET || b.url == WEBSOCKET_TRADE_TESTNET || b.url == WEBSOCKET_TRADE_DEMO || b.url == WEBSOCKET_PRIVATE_DEMO
+		b.url == WEBSOCKET_PRIVATE_TESTNET || b.url == WEBSOCKET_TRADE_MAINNET || b.url == WEBSOCKET_TRADE_TESTNET || b.url == WEBSOCKET_TRADE_DEMO || b.url == WEBSOCKET_PRIVATE_DEMO || b.isPrivate
 	// v3 offline
 	/*
 		b.url == V3_CONTRACT_PRIVATE ||

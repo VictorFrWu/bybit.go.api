@@ -2,9 +2,10 @@ package bybit_connector
 
 import (
 	"context"
-	"github.com/bybit-exchange/bybit.go.api/handlers"
-	"github.com/bybit-exchange/bybit.go.api/models"
 	"net/http"
+
+	"github.com/mudrex/bybit.go.api/handlers"
+	"github.com/mudrex/bybit.go.api/models"
 )
 
 func (s *BybitClientRequest) PlaceOrder(ctx context.Context, opts ...RequestOption) (res *ServerResponse, err error) {

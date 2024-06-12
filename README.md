@@ -1,5 +1,5 @@
 # bybit-go-api
-[![GO 1.21.0](https://img.shields.io/badge/Go-1.21.0-brightgreen.svg)](https://github.com/VictorFrWu/bybit-go-api)   [![Contributor Victor](https://img.shields.io/badge/contributor-Victor-blue.svg)](https://github.com/bybit-exchange/bybit-go-api)   [![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](https://github.com/VictorFrWu/bybit-go-api/blob/main/LICENSE)
+[![GO 1.21.0](https://img.shields.io/badge/Go-1.21.0-brightgreen.svg)](https://github.com/mudrex/bybit-go-api)   [![Contributor Victor](https://img.shields.io/badge/contributor-Victor-blue.svg)](https://github.com/mudrex/bybit-go-api)   [![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](https://github.com/mudrex/bybit-go-api/blob/main/LICENSE)
 ## Table of Contents
 - [About](#about)
 - [Release](#release)
@@ -42,7 +42,7 @@ require (
 ```
 
 To import my package you need just to put the link to your go mode file
-**github.com/bybit-exchange/bybit.go.api**
+**github.com/mudrex/bybit.go.api**
 
 ## Usage
 Note: Replace placeholders (like YOUR_API_KEY, links, or other details) with the actual information. You can also customize this template to better fit the actual state and details of your Java API.
@@ -164,7 +164,7 @@ List of other contributors
 <table>
   <tr>
     <td align="center">
-        <a href="https://github.com/VictorFrWu">
+        <a href="https://github.com/mudrex">
             <img src="https://avatars.githubusercontent.com/u/32245754?v=4" width="100px;" alt=""/>
             <br />
             <sub>   
@@ -172,8 +172,8 @@ List of other contributors
             </sub>
         </a>
         <br />
-        <a href="https://github.com/VictorFrWu/bybit.go.api/commits?author=bybit-exchange" title="Code">💻</a>
-        <a href="https://github.com/VictorFrWu/bybit.go.api/commits?author=bybit-exchange" title="Documentation">📖</a>
+        <a href="https://github.com/mudrex/bybit-java-api/commits?author=mudrex" title="Code">💻</a>
+        <a href="https://github.com/mudrex/bybit-java-api/commits?author=mudrex" title="Documentation">📖</a>
     </td>
   </tr>
 </table>
