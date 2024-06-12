@@ -16,7 +16,7 @@ import (
 
 	"github.com/bitly/go-simplejson"
 	jsoniter "github.com/json-iterator/go"
-	"github.com/wuhewuhe/bybit.go.api/handlers"
+	"github.com/mudrex/bybit.go.api/handlers"
 )
 
 var json = jsoniter.ConfigCompatibleWithStandardLibrary

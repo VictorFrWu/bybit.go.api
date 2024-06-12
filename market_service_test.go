@@ -4,8 +4,8 @@ import (
 	"net/http"
 	"testing"
 
+	"github.com/mudrex/bybit.go.api/models"
 	"github.com/stretchr/testify/suite"
-	"github.com/wuhewuhe/bybit.go.api/models"
 )
 
 type marketTestSuite struct {
