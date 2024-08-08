@@ -142,6 +142,9 @@ func (s *BybitClientRequest) SetCollateralCoin(ctx context.Context, opts ...Requ
 }
 
 func (s *BybitClientRequest) SetMarginMode(ctx context.Context, opts ...RequestOption) (res *ServerResponse, err error) {
+	if err = handlers.ValidateParams(s.params); err != nil {
+		return nil, err
+	}
 	r := &request{
 		method:   http.MethodPost,
 		endpoint: "/v5/account/set-margin-mode",
