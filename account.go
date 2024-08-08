@@ -2,8 +2,9 @@ package bybit_connector
 
 import (
 	"context"
-	"github.com/mudrex/bybit.go.api/handlers"
 	"net/http"
+
+	"github.com/mudrex/bybit.go.api/handlers"
 )
 
 type AccountClient struct {
@@ -234,11 +235,15 @@ func (s *AccountClient) SetCollateralCoin(ctx context.Context, opts ...RequestOp
 }
 
 func (s *AccountClient) SetMarginMode(ctx context.Context, opts ...RequestOption) (res *ServerResponse, err error) {
+	if err = handlers.ValidateParams(s.params); err != nil {
+		return nil, err
+	}
 	r := &request{
 		method:   http.MethodPost,
 		endpoint: "/v5/account/set-margin-mode",
 		secType:  secTypeSigned,
 	}
+	r.setParams(s.params)
 	data, err := s.c.callAPI(ctx, r, opts...)
 	if err != nil {
 		return nil, err
