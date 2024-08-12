@@ -6,6 +6,7 @@ import (
 	"crypto/sha256"
 	"encoding/hex"
 	"fmt"
+	"sync"
 	"time"
 
 	"github.com/google/uuid"
@@ -13,6 +14,8 @@ import (
 )
 
 type MessageHandler func(message string) error
+
+var mu sync.Mutex
 
 func (b *WebSocket) handleIncomingMessages() {
 	for {
@@ -129,6 +132,8 @@ func Ping(b *WebSocket) {
 		for {
 			select {
 			case <-ticker.C: // Wait until the ticker sends a signal
+				mu.Lock()
+				defer mu.Unlock()
 				if err := b.conn.WriteMessage(websocket.PingMessage, nil); err != nil {
 					fmt.Println("Failed to send ping:", err)
 				}
@@ -146,6 +151,8 @@ func (b *WebSocket) Disconnect() error {
 }
 
 func (b *WebSocket) Send(message string) error {
+	mu.Lock()
+	defer mu.Unlock()
 	return b.conn.WriteMessage(websocket.TextMessage, []byte(message))
 }
 
