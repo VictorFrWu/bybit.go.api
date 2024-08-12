@@ -6,6 +6,7 @@ import (
 	"crypto/sha256"
 	"encoding/hex"
 	"fmt"
+	"sync"
 	"time"
 
 	"github.com/google/uuid"
@@ -13,6 +14,8 @@ import (
 )
 
 type MessageHandler func(message string) error
+
+var mu sync.Mutex
 
 func (b *WebSocket) handleIncomingMessages() {
 	for {
@@ -187,6 +190,8 @@ func ping(b *WebSocket) {
 	for {
 		select {
 		case <-ticker.C:
+			mu.Lock()
+			defer mu.Unlock()
 			currentTime := time.Now().Unix()
 			pingMessage := map[string]string{
 				"op":     "ping",
@@ -214,6 +219,12 @@ func (b *WebSocket) Disconnect() error {
 	b.cancel()
 	b.isConnected = false
 	return b.conn.Close()
+}
+
+func (b *WebSocket) Send(message string) error {
+	mu.Lock()
+	defer mu.Unlock()
+	return b.conn.WriteMessage(websocket.TextMessage, []byte(message))
 }
 
 func (b *WebSocket) requiresAuthentication() bool {
