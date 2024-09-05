@@ -123,7 +123,7 @@ func (b *WebSocket) Connect(args []string) error {
 	if b.maxAliveTime != "" {
 		wssUrl += "?max_alive_time=" + b.maxAliveTime
 	}
-	b.conn, _, err = websocket.DefaultDialer.Dial(b.url, nil)
+	b.conn, _, err = websocket.DefaultDialer.Dial(wssUrl, nil)
 	if err != nil {
 		return err
 	}
