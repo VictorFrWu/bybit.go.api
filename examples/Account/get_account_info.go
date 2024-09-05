@@ -7,13 +7,12 @@ import (
 )
 
 func main() {
-	GetTransaction()
+	GetAccountInfo()
 }
 
-func GetTransaction() {
+func GetAccountInfo() {
 	client := bybit.NewBybitHttpClient("8wYkmpLsMg10eNQyPm", "Ouxc34myDnXvei54XsBZgoQzfGxO4bkr2Zsj", bybit.WithBaseURL(bybit.TESTNET))
-	params := map[string]interface{}{"accountType": "UNIFIED", "category": "linear"}
-	accountResult, err := client.NewAccountService(params).GetTransactionLog(context.Background())
+	accountResult, err := client.NewAccountServiceNoParams().GetAccountInfo(context.Background())
 	if err != nil {
 		fmt.Println(err)
 		return
