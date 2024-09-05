@@ -2,7 +2,7 @@ package bybit_connector
 
 const (
 	Name    = "bybit.api.go"
-	Version = "1.0.2"
+	Version = "1.0.3"
 	// Https
 	MAINNET       = "https://api.bybit.com"
 	MAINNET_BACKT = "https://api.bytick.com"
@@ -21,7 +21,11 @@ const (
 
 	// WebSocket private channel
 	WEBSOCKET_PRIVATE_MAINNET = "wss://stream.bybit.com/v5/private"
+	WEBSOCKET_TRADE_MAINNET   = "wss://stream.bybit.com/v5/trade"
 	WEBSOCKET_PRIVATE_TESTNET = "wss://stream-testnet.bybit.com/v5/private"
+	WEBSOCKET_TRADE_TESTNET   = "wss://stream-testnet.bybit.com/v5/trade"
+	WEBSOCKET_PRIVATE_DEMO    = "wss://wss://stream-demo.bybit.com/v5/private"
+	WEBSOCKET_TRADE_DEMO      = "wss://wss://stream-demo.bybit.com/v5/trade"
 
 	// V3
 	V3_CONTRACT_PRIVATE = "wss://stream.bybit.com/contract/private/v3"

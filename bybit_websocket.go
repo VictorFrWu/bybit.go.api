@@ -19,6 +19,7 @@ func (b *WebSocket) handleIncomingMessages() {
 		_, message, err := b.conn.ReadMessage()
 		if err != nil {
 			fmt.Println("Error reading:", err)
+			b.isConnected = false
 			return
 		}
 
@@ -28,6 +29,31 @@ func (b *WebSocket) handleIncomingMessages() {
 				fmt.Println("Error handling message:", err)
 				return
 			}
+		}
+	}
+}
+
+func (b *WebSocket) monitorConnection(args []string) {
+	ticker := time.NewTicker(time.Second * 5) // Check every 5 seconds
+	defer ticker.Stop()
+
+	for {
+		<-ticker.C
+		if !b.isConnected && b.ctx.Err() == nil { // Check if disconnected and context not done
+			fmt.Println("Attempting to reconnect...")
+			err := b.Connect(args) // Example, adjust parameters as needed
+			if err != nil {
+				fmt.Println("Reconnection failed:", err)
+			} else {
+				b.isConnected = true
+				go b.handleIncomingMessages() // Restart message handling
+			}
+		}
+
+		select {
+		case <-b.ctx.Done():
+			return // Stop the routine if context is done
+		default:
 		}
 	}
 }
@@ -46,6 +72,7 @@ type WebSocket struct {
 	onMessage    MessageHandler
 	ctx          context.Context
 	cancel       context.CancelFunc
+	isConnected  bool
 }
 
 type WebsocketOption func(*WebSocket)
@@ -80,16 +107,11 @@ func NewBybitPrivateWebSocket(url, apiKey, apiSecret string, handler MessageHand
 	return c
 }
 
-func NewBybitPublicWebSocket(url string, pingInterval int, handler MessageHandler, options ...WebsocketOption) *WebSocket {
+func NewBybitPublicWebSocket(url string, handler MessageHandler) *WebSocket {
 	c := &WebSocket{
 		url:          url,
-		pingInterval: pingInterval, // default is 20 seconds
+		pingInterval: 20, // default is 20 seconds
 		onMessage:    handler,
-	}
-
-	// Apply the provided options
-	for _, opt := range options {
-		opt(c)
 	}
 
 	return c
@@ -101,7 +123,7 @@ func (b *WebSocket) Connect(args []string) error {
 	if b.maxAliveTime != "" {
 		wssUrl += "?max_alive_time=" + b.maxAliveTime
 	}
-	b.conn, _, err = websocket.DefaultDialer.Dial(b.url, nil)
+	b.conn, _, err = websocket.DefaultDialer.Dial(wssUrl, nil)
 	if err != nil {
 		return err
 	}
@@ -111,8 +133,10 @@ func (b *WebSocket) Connect(args []string) error {
 			return err
 		}
 	}
+	b.isConnected = true
 
 	go b.handleIncomingMessages()
+	go b.monitorConnection(args)
 
 	b.ctx, b.cancel = context.WithCancel(context.Background())
 	Ping(b)
@@ -121,25 +145,43 @@ func (b *WebSocket) Connect(args []string) error {
 }
 
 func Ping(b *WebSocket) {
+	if b.pingInterval <= 0 {
+		fmt.Println("Ping interval is set to a non-positive value.")
+		return
+	}
+
 	ticker := time.NewTicker(time.Duration(b.pingInterval) * time.Second)
-	go func() {
-		defer ticker.Stop() // Ensure the ticker is stopped when this goroutine ends
-		for {
-			select {
-			case <-ticker.C: // Wait until the ticker sends a signal
-				if err := b.conn.WriteMessage(websocket.PingMessage, nil); err != nil {
-					fmt.Println("Failed to send ping:", err)
-				}
-			case <-b.ctx.Done():
-				fmt.Println("Exit ping")
+	defer ticker.Stop()
+
+	for {
+		select {
+		case <-ticker.C:
+			currentTime := time.Now().Unix()
+			pingMessage := map[string]string{
+				"op":     "ping",
+				"req_id": fmt.Sprintf("%d", currentTime),
+			}
+			jsonPingMessage, err := json.Marshal(pingMessage)
+			if err != nil {
+				fmt.Println("Failed to marshal ping message:", err)
+				continue
+			}
+			if err := b.conn.WriteMessage(websocket.TextMessage, jsonPingMessage); err != nil {
+				fmt.Println("Failed to send ping:", err)
 				return
 			}
+			fmt.Println("Ping sent with UTC time:", currentTime)
+
+		case <-b.ctx.Done():
+			fmt.Println("Ping context closed, stopping ping.")
+			return
 		}
-	}()
+	}
 }
 
 func (b *WebSocket) Disconnect() error {
 	b.cancel()
+	b.isConnected = false
 	return b.conn.Close()
 }
 
@@ -149,10 +191,13 @@ func (b *WebSocket) Send(message string) error {
 
 func (b *WebSocket) requiresAuthentication() bool {
 	return b.url == WEBSOCKET_PRIVATE_MAINNET ||
-		b.url == WEBSOCKET_PRIVATE_TESTNET ||
+		b.url == WEBSOCKET_PRIVATE_TESTNET || b.url == WEBSOCKET_TRADE_MAINNET || b.url == WEBSOCKET_TRADE_TESTNET || b.url == WEBSOCKET_TRADE_DEMO || b.url == WEBSOCKET_PRIVATE_DEMO
+	// v3 offline
+	/*
 		b.url == V3_CONTRACT_PRIVATE ||
-		b.url == V3_UNIFIED_PRIVATE ||
-		b.url == V3_SPOT_PRIVATE
+			b.url == V3_UNIFIED_PRIVATE ||
+			b.url == V3_SPOT_PRIVATE
+	*/
 }
 
 func (b *WebSocket) sendAuth() error {

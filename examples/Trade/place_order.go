@@ -11,8 +11,8 @@ func main() {
 }
 
 func PlaceOrder() {
-	client := bybit.NewBybitHttpClient("8wYkmpLsMg10eNQyPm", "Ouxc34myDnXvei54XsBZgoQzfGxO4bkr2Zsj", bybit.WithBaseURL(bybit.TESTNET))
-	orderResult, err := client.NewPlaceOrderService("linear", "XRPUSDT", "Buy", "Market", "10").Do(context.Background())
+	client := bybit.NewBybitHttpClient("d08Wh6P037IXAvcrL2", "gLfd1BLGU9oq6YoRZRlwXkIQRYB4n5KvXDvv", bybit.WithBaseURL(bybit.TESTNET), bybit.WithDebug(true))
+	orderResult, err := client.NewPlaceOrderService("linear", "XRPUSDT", "Buy", "Market", "15").Do(context.Background())
 	if err != nil {
 		fmt.Println(err)
 		return
