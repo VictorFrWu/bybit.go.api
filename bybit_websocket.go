@@ -145,21 +145,38 @@ func (b *WebSocket) Connect(args []string) error {
 }
 
 func Ping(b *WebSocket) {
+	if b.pingInterval <= 0 {
+		fmt.Println("Ping interval is set to a non-positive value.")
+		return
+	}
+
 	ticker := time.NewTicker(time.Duration(b.pingInterval) * time.Second)
-	go func() {
-		defer ticker.Stop() // Ensure the ticker is stopped when this goroutine ends
-		for {
-			select {
-			case <-ticker.C: // Wait until the ticker sends a signal
-				if err := b.conn.WriteMessage(websocket.PingMessage, nil); err != nil {
-					fmt.Println("Failed to send ping:", err)
-				}
-			case <-b.ctx.Done():
-				fmt.Println("Exit ping")
+	defer ticker.Stop()
+
+	for {
+		select {
+		case <-ticker.C:
+			currentTime := time.Now().Unix()
+			pingMessage := map[string]string{
+				"op":     "ping",
+				"req_id": fmt.Sprintf("%d", currentTime),
+			}
+			jsonPingMessage, err := json.Marshal(pingMessage)
+			if err != nil {
+				fmt.Println("Failed to marshal ping message:", err)
+				continue
+			}
+			if err := b.conn.WriteMessage(websocket.TextMessage, jsonPingMessage); err != nil {
+				fmt.Println("Failed to send ping:", err)
 				return
 			}
+			fmt.Println("Ping sent with UTC time:", currentTime)
+
+		case <-b.ctx.Done():
+			fmt.Println("Ping context closed, stopping ping.")
+			return
 		}
-	}()
+	}
 }
 
 func (b *WebSocket) Disconnect() error {
@@ -174,10 +191,13 @@ func (b *WebSocket) Send(message string) error {
 
 func (b *WebSocket) requiresAuthentication() bool {
 	return b.url == WEBSOCKET_PRIVATE_MAINNET ||
-		b.url == WEBSOCKET_PRIVATE_TESTNET ||
+		b.url == WEBSOCKET_PRIVATE_TESTNET || b.url == WEBSOCKET_TRADE_MAINNET || b.url == WEBSOCKET_TRADE_TESTNET || b.url == WEBSOCKET_TRADE_DEMO || b.url == WEBSOCKET_PRIVATE_DEMO
+	// v3 offline
+	/*
 		b.url == V3_CONTRACT_PRIVATE ||
-		b.url == V3_UNIFIED_PRIVATE ||
-		b.url == V3_SPOT_PRIVATE
+			b.url == V3_UNIFIED_PRIVATE ||
+			b.url == V3_SPOT_PRIVATE
+	*/
 }
 
 func (b *WebSocket) sendAuth() error {
