@@ -19,6 +19,7 @@ func (b *WebSocket) handleIncomingMessages() {
 		_, message, err := b.conn.ReadMessage()
 		if err != nil {
 			fmt.Println("Error reading:", err)
+			b.isConnected = false
 			return
 		}
 
@@ -28,6 +29,31 @@ func (b *WebSocket) handleIncomingMessages() {
 				fmt.Println("Error handling message:", err)
 				return
 			}
+		}
+	}
+}
+
+func (b *WebSocket) monitorConnection(args []string) {
+	ticker := time.NewTicker(time.Second * 5) // Check every 5 seconds
+	defer ticker.Stop()
+
+	for {
+		<-ticker.C
+		if !b.isConnected && b.ctx.Err() == nil { // Check if disconnected and context not done
+			fmt.Println("Attempting to reconnect...")
+			err := b.Connect(args) // Example, adjust parameters as needed
+			if err != nil {
+				fmt.Println("Reconnection failed:", err)
+			} else {
+				b.isConnected = true
+				go b.handleIncomingMessages() // Restart message handling
+			}
+		}
+
+		select {
+		case <-b.ctx.Done():
+			return // Stop the routine if context is done
+		default:
 		}
 	}
 }
@@ -46,6 +72,7 @@ type WebSocket struct {
 	onMessage    MessageHandler
 	ctx          context.Context
 	cancel       context.CancelFunc
+	isConnected  bool
 }
 
 type WebsocketOption func(*WebSocket)
@@ -80,16 +107,11 @@ func NewBybitPrivateWebSocket(url, apiKey, apiSecret string, handler MessageHand
 	return c
 }
 
-func NewBybitPublicWebSocket(url string, pingInterval int, handler MessageHandler, options ...WebsocketOption) *WebSocket {
+func NewBybitPublicWebSocket(url string, handler MessageHandler) *WebSocket {
 	c := &WebSocket{
 		url:          url,
-		pingInterval: pingInterval, // default is 20 seconds
+		pingInterval: 20, // default is 20 seconds
 		onMessage:    handler,
-	}
-
-	// Apply the provided options
-	for _, opt := range options {
-		opt(c)
 	}
 
 	return c
@@ -111,8 +133,10 @@ func (b *WebSocket) Connect(args []string) error {
 			return err
 		}
 	}
+	b.isConnected = true
 
 	go b.handleIncomingMessages()
+	go b.monitorConnection(args)
 
 	b.ctx, b.cancel = context.WithCancel(context.Background())
 	Ping(b)
@@ -140,6 +164,7 @@ func Ping(b *WebSocket) {
 
 func (b *WebSocket) Disconnect() error {
 	b.cancel()
+	b.isConnected = false
 	return b.conn.Close()
 }
 
