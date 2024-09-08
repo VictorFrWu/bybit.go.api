@@ -6,12 +6,7 @@ import (
 	"net/http"
 )
 
-type BrokerServiceClient struct {
-	c      *Client
-	params map[string]interface{}
-}
-
-func (s *BrokerServiceClient) GetBrokerEarning(ctx context.Context, opts ...RequestOption) (res *ServerResponse, err error) {
+func (s *BybitClientRequest) GetBrokerEarning(ctx context.Context, opts ...RequestOption) (res *ServerResponse, err error) {
 	if err = handlers.ValidateParams(s.params); err != nil {
 		return nil, err
 	}
@@ -20,20 +15,11 @@ func (s *BrokerServiceClient) GetBrokerEarning(ctx context.Context, opts ...Requ
 		endpoint: "/v5/broker/earnings-info",
 		secType:  secTypeSigned,
 	}
-	r.setParams(s.params)
-	data, err := s.c.callAPI(ctx, r, opts...)
-	if err != nil {
-		return nil, err
-	}
-	res = new(ServerResponse)
-	err = json.Unmarshal(data, res)
-	if err != nil {
-		return nil, err
-	}
-	return res, nil
+	data := SendRequest(ctx, opts, r, s, err)
+	return GetServerResponse(err, data)
 }
 
-func (s *BrokerServiceClient) GetBrokerAccountInfo(ctx context.Context, opts ...RequestOption) (res *ServerResponse, err error) {
+func (s *BybitClientRequest) GetBrokerAccountInfo(ctx context.Context, opts ...RequestOption) (res *ServerResponse, err error) {
 	if err = handlers.ValidateParams(s.params); err != nil {
 		return nil, err
 	}
@@ -42,15 +28,19 @@ func (s *BrokerServiceClient) GetBrokerAccountInfo(ctx context.Context, opts ...
 		endpoint: "/v5/broker/account-info",
 		secType:  secTypeSigned,
 	}
-	r.setParams(s.params)
-	data, err := s.c.callAPI(ctx, r, opts...)
-	if err != nil {
+	data := SendRequest(ctx, opts, r, s, err)
+	return GetServerResponse(err, data)
+}
+
+func (s *BybitClientRequest) GetAllSubMembersDepositRecords(ctx context.Context, opts ...RequestOption) (res *ServerResponse, err error) {
+	if err = handlers.ValidateParams(s.params); err != nil {
 		return nil, err
 	}
-	res = new(ServerResponse)
-	err = json.Unmarshal(data, res)
-	if err != nil {
-		return nil, err
+	r := &request{
+		method:   http.MethodGet,
+		endpoint: "/v5/broker/asset/query-sub-member-deposit-record",
+		secType:  secTypeSigned,
 	}
-	return res, nil
+	data := SendRequest(ctx, opts, r, s, err)
+	return GetServerResponse(err, data)
 }

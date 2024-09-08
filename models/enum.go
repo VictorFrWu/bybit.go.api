@@ -46,7 +46,6 @@ type SymbolStatus string
 const (
 	SymbolStatusPreLaunch  SymbolStatus = "PreLaunch"
 	SymbolStatusTrading    SymbolStatus = "Trading"
-	SymbolStatusSettling   SymbolStatus = "Settling"
 	SymbolStatusDelivering SymbolStatus = "Delivering"
 	SymbolStatusClosed     SymbolStatus = "Closed"
 )

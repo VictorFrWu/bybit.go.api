@@ -21,7 +21,7 @@ func PlaceOrderMap() {
 		"price":       "10000",
 		"timeInForce": "GTC",
 	}
-	orderResult, err := client.NewTradeService(params).PlaceOrder(context.Background())
+	orderResult, err := client.NewUtaBybitServiceWithParams(params).PlaceOrder(context.Background())
 	if err != nil {
 		fmt.Println(err)
 		return
