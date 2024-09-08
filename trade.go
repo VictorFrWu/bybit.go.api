@@ -7,12 +7,7 @@ import (
 	"net/http"
 )
 
-type TradeClient struct {
-	c      *Client
-	params map[string]interface{}
-}
-
-func (s *TradeClient) PlaceOrder(ctx context.Context, opts ...RequestOption) (res *ServerResponse, err error) {
+func (s *BybitClientRequest) PlaceOrder(ctx context.Context, opts ...RequestOption) (res *ServerResponse, err error) {
 	if err = handlers.ValidateParams(s.params); err != nil {
 		return nil, err
 	}
@@ -21,20 +16,11 @@ func (s *TradeClient) PlaceOrder(ctx context.Context, opts ...RequestOption) (re
 		endpoint: "/v5/order/create",
 		secType:  secTypeSigned,
 	}
-	r.setParams(s.params)
-	data, err := s.c.callAPI(ctx, r, opts...)
-	if err != nil {
-		return nil, err
-	}
-	res = new(ServerResponse)
-	err = json.Unmarshal(data, res)
-	if err != nil {
-		return nil, err
-	}
-	return res, nil
+	data := SendRequest(ctx, opts, r, s, err)
+	return GetServerResponse(err, data)
 }
 
-func (s *TradeClient) AmendOrder(ctx context.Context, opts ...RequestOption) (res *ServerResponse, err error) {
+func (s *BybitClientRequest) AmendOrder(ctx context.Context, opts ...RequestOption) (res *ServerResponse, err error) {
 	if err = handlers.ValidateParams(s.params); err != nil {
 		return nil, err
 	}
@@ -43,20 +29,11 @@ func (s *TradeClient) AmendOrder(ctx context.Context, opts ...RequestOption) (re
 		endpoint: "/v5/order/amend",
 		secType:  secTypeSigned,
 	}
-	r.setParams(s.params)
-	data, err := s.c.callAPI(ctx, r, opts...)
-	if err != nil {
-		return nil, err
-	}
-	res = new(ServerResponse)
-	err = json.Unmarshal(data, res)
-	if err != nil {
-		return nil, err
-	}
-	return res, nil
+	data := SendRequest(ctx, opts, r, s, err)
+	return GetServerResponse(err, data)
 }
 
-func (s *TradeClient) CancelOrder(ctx context.Context, opts ...RequestOption) (res *ServerResponse, err error) {
+func (s *BybitClientRequest) CancelOrder(ctx context.Context, opts ...RequestOption) (res *ServerResponse, err error) {
 	if err = handlers.ValidateParams(s.params); err != nil {
 		return nil, err
 	}
@@ -65,20 +42,11 @@ func (s *TradeClient) CancelOrder(ctx context.Context, opts ...RequestOption) (r
 		endpoint: "/v5/order/cancel",
 		secType:  secTypeSigned,
 	}
-	r.setParams(s.params)
-	data, err := s.c.callAPI(ctx, r, opts...)
-	if err != nil {
-		return nil, err
-	}
-	res = new(ServerResponse)
-	err = json.Unmarshal(data, res)
-	if err != nil {
-		return nil, err
-	}
-	return res, nil
+	data := SendRequest(ctx, opts, r, s, err)
+	return GetServerResponse(err, data)
 }
 
-func (s *TradeClient) GetOpenOrders(ctx context.Context, opts ...RequestOption) (res *ServerResponse, err error) {
+func (s *BybitClientRequest) GetOpenOrders(ctx context.Context, opts ...RequestOption) (res *ServerResponse, err error) {
 	if err = handlers.ValidateParams(s.params); err != nil {
 		return nil, err
 	}
@@ -87,20 +55,11 @@ func (s *TradeClient) GetOpenOrders(ctx context.Context, opts ...RequestOption) 
 		endpoint: "/v5/order/realtime",
 		secType:  secTypeSigned,
 	}
-	r.setParams(s.params)
-	data, err := s.c.callAPI(ctx, r, opts...)
-	if err != nil {
-		return nil, err
-	}
-	res = new(ServerResponse)
-	err = json.Unmarshal(data, res)
-	if err != nil {
-		return nil, err
-	}
-	return res, nil
+	data := SendRequest(ctx, opts, r, s, err)
+	return GetServerResponse(err, data)
 }
 
-func (s *TradeClient) GetOrderHistory(ctx context.Context, opts ...RequestOption) (res *ServerResponse, err error) {
+func (s *BybitClientRequest) GetOrderHistory(ctx context.Context, opts ...RequestOption) (res *ServerResponse, err error) {
 	if err = handlers.ValidateParams(s.params); err != nil {
 		return nil, err
 	}
@@ -109,20 +68,11 @@ func (s *TradeClient) GetOrderHistory(ctx context.Context, opts ...RequestOption
 		endpoint: "/v5/order/history",
 		secType:  secTypeSigned,
 	}
-	r.setParams(s.params)
-	data, err := s.c.callAPI(ctx, r, opts...)
-	if err != nil {
-		return nil, err
-	}
-	res = new(ServerResponse)
-	err = json.Unmarshal(data, res)
-	if err != nil {
-		return nil, err
-	}
-	return res, nil
+	data := SendRequest(ctx, opts, r, s, err)
+	return GetServerResponse(err, data)
 }
 
-func (s *TradeClient) GetSpotBorrowQuota(ctx context.Context, opts ...RequestOption) (res *ServerResponse, err error) {
+func (s *BybitClientRequest) GetSpotBorrowQuota(ctx context.Context, opts ...RequestOption) (res *ServerResponse, err error) {
 	if err = handlers.ValidateParams(s.params); err != nil {
 		return nil, err
 	}
@@ -131,20 +81,11 @@ func (s *TradeClient) GetSpotBorrowQuota(ctx context.Context, opts ...RequestOpt
 		endpoint: "/v5/order/spot-borrow-check",
 		secType:  secTypeSigned,
 	}
-	r.setParams(s.params)
-	data, err := s.c.callAPI(ctx, r, opts...)
-	if err != nil {
-		return nil, err
-	}
-	res = new(ServerResponse)
-	err = json.Unmarshal(data, res)
-	if err != nil {
-		return nil, err
-	}
-	return res, nil
+	data := SendRequest(ctx, opts, r, s, err)
+	return GetServerResponse(err, data)
 }
 
-func (s *TradeClient) CancelAllOrders(ctx context.Context, opts ...RequestOption) (res *ServerResponse, err error) {
+func (s *BybitClientRequest) CancelAllOrders(ctx context.Context, opts ...RequestOption) (res *ServerResponse, err error) {
 	if err = handlers.ValidateParams(s.params); err != nil {
 		return nil, err
 	}
@@ -153,20 +94,11 @@ func (s *TradeClient) CancelAllOrders(ctx context.Context, opts ...RequestOption
 		endpoint: "/v5/order/cancel-all",
 		secType:  secTypeSigned,
 	}
-	r.setParams(s.params)
-	data, err := s.c.callAPI(ctx, r, opts...)
-	if err != nil {
-		return nil, err
-	}
-	res = new(ServerResponse)
-	err = json.Unmarshal(data, res)
-	if err != nil {
-		return nil, err
-	}
-	return res, nil
+	data := SendRequest(ctx, opts, r, s, err)
+	return GetServerResponse(err, data)
 }
 
-func (s *TradeClient) SetDisconnectCancelAll(ctx context.Context, opts ...RequestOption) (res *ServerResponse, err error) {
+func (s *BybitClientRequest) SetDisconnectCancelAll(ctx context.Context, opts ...RequestOption) (res *ServerResponse, err error) {
 	if err = handlers.ValidateParams(s.params); err != nil {
 		return nil, err
 	}
@@ -175,20 +107,11 @@ func (s *TradeClient) SetDisconnectCancelAll(ctx context.Context, opts ...Reques
 		endpoint: "/v5/order/disconnected-cancel-all",
 		secType:  secTypeSigned,
 	}
-	r.setParams(s.params)
-	data, err := s.c.callAPI(ctx, r, opts...)
-	if err != nil {
-		return nil, err
-	}
-	res = new(ServerResponse)
-	err = json.Unmarshal(data, res)
-	if err != nil {
-		return nil, err
-	}
-	return res, nil
+	data := SendRequest(ctx, opts, r, s, err)
+	return GetServerResponse(err, data)
 }
 
-func (s *TradeClient) PlaceBatchOrder(ctx context.Context, opts ...RequestOption) (res *models.BatchOrderServerResponse, err error) {
+func (s *BybitClientRequest) PlaceBatchOrder(ctx context.Context, opts ...RequestOption) (res *models.BatchOrderServerResponse, err error) {
 	if err = handlers.ValidateParams(s.params); err != nil {
 		return nil, err
 	}
@@ -197,20 +120,11 @@ func (s *TradeClient) PlaceBatchOrder(ctx context.Context, opts ...RequestOption
 		endpoint: "/v5/order/create-batch",
 		secType:  secTypeSigned,
 	}
-	r.setParams(s.params)
-	data, err := s.c.callAPI(ctx, r, opts...)
-	if err != nil {
-		return nil, err
-	}
-	res = new(models.BatchOrderServerResponse)
-	err = json.Unmarshal(data, res)
-	if err != nil {
-		return nil, err
-	}
-	return res, nil
+	data := SendRequest(ctx, opts, r, s, err)
+	return GetBatchOrderServerResponse(err, data)
 }
 
-func (s *TradeClient) AmendBatchOrder(ctx context.Context, opts ...RequestOption) (res *models.BatchOrderServerResponse, err error) {
+func (s *BybitClientRequest) AmendBatchOrder(ctx context.Context, opts ...RequestOption) (res *models.BatchOrderServerResponse, err error) {
 	if err = handlers.ValidateParams(s.params); err != nil {
 		return nil, err
 	}
@@ -219,20 +133,11 @@ func (s *TradeClient) AmendBatchOrder(ctx context.Context, opts ...RequestOption
 		endpoint: "/v5/order/amend-batch",
 		secType:  secTypeSigned,
 	}
-	r.setParams(s.params)
-	data, err := s.c.callAPI(ctx, r, opts...)
-	if err != nil {
-		return nil, err
-	}
-	res = new(models.BatchOrderServerResponse)
-	err = json.Unmarshal(data, res)
-	if err != nil {
-		return nil, err
-	}
-	return res, nil
+	data := SendRequest(ctx, opts, r, s, err)
+	return GetBatchOrderServerResponse(err, data)
 }
 
-func (s *TradeClient) CancelBatchOrder(ctx context.Context, opts ...RequestOption) (res *models.BatchOrderServerResponse, err error) {
+func (s *BybitClientRequest) CancelBatchOrder(ctx context.Context, opts ...RequestOption) (res *models.BatchOrderServerResponse, err error) {
 	if err = handlers.ValidateParams(s.params); err != nil {
 		return nil, err
 	}
@@ -241,15 +146,32 @@ func (s *TradeClient) CancelBatchOrder(ctx context.Context, opts ...RequestOptio
 		endpoint: "/v5/order/cancel-batch",
 		secType:  secTypeSigned,
 	}
-	r.setParams(s.params)
-	data, err := s.c.callAPI(ctx, r, opts...)
-	if err != nil {
+	data := SendRequest(ctx, opts, r, s, err)
+	return GetBatchOrderServerResponse(err, data)
+}
+
+func (s *BybitClientRequest) GetTradeHistory(ctx context.Context, opts ...RequestOption) (res *ServerResponse, err error) {
+	if err = handlers.ValidateParams(s.params); err != nil {
 		return nil, err
 	}
-	res = new(models.BatchOrderServerResponse)
-	err = json.Unmarshal(data, res)
-	if err != nil {
+	r := &request{
+		method:   http.MethodGet,
+		endpoint: "/v5/execution/list",
+		secType:  secTypeSigned,
+	}
+	data := SendRequest(ctx, opts, r, s, err)
+	return GetServerResponse(err, data)
+}
+
+func (s *BybitClientRequest) RequestTestFund(ctx context.Context, opts ...RequestOption) (res *ServerResponse, err error) {
+	if err = handlers.ValidateParams(s.params); err != nil {
 		return nil, err
 	}
-	return res, nil
+	r := &request{
+		method:   http.MethodGet,
+		endpoint: "/v5/account/demo-apply-money",
+		secType:  secTypeSigned,
+	}
+	data := SendRequest(ctx, opts, r, s, err)
+	return GetServerResponse(err, data)
 }

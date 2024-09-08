@@ -7,6 +7,7 @@ import (
 	"crypto/sha256"
 	"encoding/hex"
 	"fmt"
+	"github.com/wuhewuhe/bybit.go.api/models"
 	"io"
 	"log"
 	"net/http"
@@ -21,12 +22,48 @@ import (
 
 var json = jsoniter.ConfigCompatibleWithStandardLibrary
 
+type BybitClientRequest struct {
+	c      *Client
+	params map[string]interface{}
+	isUta  bool
+}
+
 type ServerResponse struct {
 	RetCode    int         `json:"retCode"`
 	RetMsg     string      `json:"retMsg"`
 	Result     interface{} `json:"result"`
 	RetExtInfo struct{}    `json:"retExtInfo"`
 	Time       int64       `json:"time"`
+}
+
+func SendRequest(ctx context.Context, opts []RequestOption, r *request, s *BybitClientRequest, err error) []byte {
+	r.setParams(s.params)
+	data, err := s.c.callAPI(ctx, r, opts...)
+	return data
+}
+
+func GetServerResponse(err error, data []byte) (*ServerResponse, error) {
+	if err != nil {
+		return nil, err
+	}
+	resp := new(ServerResponse)
+	err = json.Unmarshal(data, resp)
+	if err != nil {
+		return nil, err
+	}
+	return resp, nil
+}
+
+func GetBatchOrderServerResponse(err error, data []byte) (*models.BatchOrderServerResponse, error) {
+	if err != nil {
+		return nil, err
+	}
+	resp := new(models.BatchOrderServerResponse)
+	err = json.Unmarshal(data, resp)
+	if err != nil {
+		return nil, err
+	}
+	return resp, nil
 }
 
 // Client define API client
@@ -211,82 +248,7 @@ func (c *Client) callAPI(ctx context.Context, r *request, opts ...RequestOption)
 	return data, nil
 }
 
-func (c *Client) NewInstrumentsInfoService() *InstrumentsInfoService {
-	return &InstrumentsInfoService{c: c}
-}
-
-// NewMarketKlineService Market Kline Endpoints
-func (c *Client) NewMarketKlineService() *MarketKlinesService {
-	return &MarketKlinesService{c: c}
-}
-
-// NewMarketMarkPriceKlineService Market Mark Price Kline Endpoints
-func (c *Client) NewMarketMarkPriceKlineService() *MarketMarkPriceKlineService {
-	return &MarketMarkPriceKlineService{c: c}
-}
-
-// NewMarketIndexPriceKlineService Market Index Price Kline Endpoints
-func (c *Client) NewMarketIndexPriceKlineService() *MarketIndexPriceKlineService {
-	return &MarketIndexPriceKlineService{c: c}
-}
-
-// NewMarketPremiumIndexPriceKlineService Market Premium Index Price Kline Endpoints
-func (c *Client) NewMarketPremiumIndexPriceKlineService() *MarketPremiumIndexPriceKlineService {
-	return &MarketPremiumIndexPriceKlineService{c: c}
-}
-
-func (c *Client) NewOrderBookService() *MarketOrderBookService {
-	return &MarketOrderBookService{c: c}
-}
-
-func (c *Client) NewTickersService() *MarketTickersService {
-	return &MarketTickersService{c: c}
-}
-
-func (c *Client) NewFundingTatesService() *MarketFundingRatesService {
-	return &MarketFundingRatesService{c: c}
-}
-
-func (c *Client) NewGetPublicRecentTradesService() *GetPublicRecentTradesService {
-	return &GetPublicRecentTradesService{c: c}
-}
-
-// GetOpenInterestsServicdde
-func (c *Client) NewGetOpenInterestsService() *GetOpenInterestsService {
-	return &GetOpenInterestsService{c: c}
-}
-
-// GetHistoricalVolatilityService
-func (c *Client) NewGetHistoricalVolatilityService() *GetHistoricalVolatilityService {
-	return &GetHistoricalVolatilityService{c: c}
-}
-
-// GetInsuranceInfoService
-func (c *Client) NewGetInsuranceInfoService() *GetInsuranceInfoService {
-	return &GetInsuranceInfoService{c: c}
-}
-
-// GetRiskLimitService
-func (c *Client) NewGetRiskLimitService() *GetRiskLimitService {
-	return &GetRiskLimitService{c: c}
-}
-
-// GetDeliveryPriceService
-func (c *Client) NewGetDeliveryPriceService() *GetDeliveryPriceService {
-	return &GetDeliveryPriceService{c: c}
-}
-
-// GetMarketLSRatioService
-func (c *Client) NewGetMarketLSRatioService() *GetMarketLSRatioService {
-	return &GetMarketLSRatioService{c: c}
-}
-
-// GetServerTimeService
-func (c *Client) NewGetServerTimeService() *GetServerTimeService {
-	return &GetServerTimeService{c: c}
-}
-
-// NewPlaceOrderService Trade Endpoints
+// NewPlaceOrderService quick order endpoint
 func (c *Client) NewPlaceOrderService(category, symbol, side, orderType, qty string) *Order {
 	return &Order{
 		c:         c,
@@ -298,92 +260,32 @@ func (c *Client) NewPlaceOrderService(category, symbol, side, orderType, qty str
 	}
 }
 
-func (c *Client) NewTradeService(params map[string]interface{}) *TradeClient {
-	return &TradeClient{
+func (c *Client) NewUtaBybitServiceWithParams(params map[string]interface{}) *BybitClientRequest {
+	return &BybitClientRequest{
 		c:      c,
 		params: params,
+		isUta:  true,
 	}
 }
 
-func (c *Client) NewPositionService(params map[string]interface{}) *PositionClient {
-	return &PositionClient{
+func (c *Client) NewUtaBybitServiceNoParams() *BybitClientRequest {
+	return &BybitClientRequest{
+		c:     c,
+		isUta: true,
+	}
+}
+
+func (c *Client) NewClassicalBybitServiceWithParams(params map[string]interface{}) *BybitClientRequest {
+	return &BybitClientRequest{
 		c:      c,
 		params: params,
-	}
-
-}
-
-func (c *Client) NewPreUpgradeService(params map[string]interface{}) *PreUpgradeClient {
-	return &PreUpgradeClient{
-		c:      c,
-		params: params,
+		isUta:  false,
 	}
 }
 
-func (c *Client) NewAccountService(params map[string]interface{}) *AccountClient {
-	return &AccountClient{
-		c:      c,
-		params: params,
-	}
-}
-
-func (c *Client) NewAccountServiceNoParams() *AccountClient {
-	return &AccountClient{
-		c: c,
-	}
-}
-
-func (c *Client) NewAssetService(params map[string]interface{}) *AssetClient {
-	return &AssetClient{
-		c:      c,
-		params: params,
-	}
-}
-
-func (c *Client) NewUserService(params map[string]interface{}) *UserServiceClient {
-	return &UserServiceClient{
-		c:      c,
-		params: params,
-	}
-}
-
-func (c *Client) NewUserServiceNoParams() *UserServiceClient {
-	return &UserServiceClient{
-		c: c,
-	}
-}
-
-func (c *Client) NewBrokerService(params map[string]interface{}) *BrokerServiceClient {
-	return &BrokerServiceClient{
-		c:      c,
-		params: params,
-	}
-}
-
-func (c *Client) NewLendingService(params map[string]interface{}) *LendingServiceClient {
-	return &LendingServiceClient{
-		c:      c,
-		params: params,
-	}
-}
-
-func (c *Client) NewLendingServiceNoParams() *LendingServiceClient {
-	return &LendingServiceClient{
-		c: c,
-	}
-}
-
-func (c *Client) NewSpotLeverageService(params map[string]interface{}) *SpotLeverageClient {
-	return &SpotLeverageClient{
-		c:      c,
-		params: params,
-	}
-}
-
-func (c *Client) NewSpotMarginDataService(params map[string]interface{}, isUta bool) *SpotMarginClient {
-	return &SpotMarginClient{
-		c:      c,
-		isUta:  isUta,
-		params: params,
+func (c *Client) NewClassicalBybitServiceNoParams() *BybitClientRequest {
+	return &BybitClientRequest{
+		c:     c,
+		isUta: false,
 	}
 }

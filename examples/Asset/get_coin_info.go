@@ -11,9 +11,9 @@ func main() {
 }
 
 func GetCoinInfo() {
-	client := bybit.NewBybitHttpClient("8wYkmpLsMg10eNQyPm", "Ouxc34myDnXvei54XsBZgoQzfGxO4bkr2Zsj", bybit.WithBaseURL(bybit.TESTNET))
+	client := bybit.NewBybitHttpClient("d08Wh6P037IXAvcrL2", "gLfd1BLGU9oq6YoRZRlwXkIQRYB4n5KvXDvv", bybit.WithBaseURL(bybit.TESTNET))
 	params := map[string]interface{}{"coin": "USDT"}
-	assetResult, err := client.NewAssetService(params).GetCoinInfo(context.Background())
+	assetResult, err := client.NewUtaBybitServiceWithParams(params).GetCoinInfo(context.Background())
 	if err != nil {
 		fmt.Println(err)
 		return
