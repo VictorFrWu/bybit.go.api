@@ -1,5 +1,13 @@
 package models
 
+type GetServerTimeResponse struct {
+	RetCode    int              `json:"retCode"`
+	RetMsg     string           `json:"retMsg"`
+	Result     ServerTimeResult `json:"result"`
+	RetExtInfo struct{}         `json:"retExtInfo"`
+	Time       int64            `json:"time"`
+}
+
 type ServerTimeResult struct {
 	TimeSecond string `json:"timeSecond"`
 	TimeNano   string `json:"timeNano"`
@@ -64,12 +72,12 @@ type MarketPremiumIndexPriceKlineResponse struct {
 }
 
 type InstrumentInfoResponse struct {
-	Category       Category     `json:"category"`
-	NextPageCursor string       `json:"nextPageCursor"`
-	List           []Instrument `json:"list"`
+	Category       Category      `json:"category"`
+	NextPageCursor string        `json:"nextPageCursor"`
+	List           []interface{} `json:"list"`
 }
 
-type Instrument struct {
+type SpotInstrument struct {
 	Symbol             string         `json:"symbol"`
 	ContractType       string         `json:"contractType"`
 	OptionType         string         `json:"optionType"`
@@ -112,6 +120,14 @@ type LotSizeFilter struct {
 	QuotePrecision      string `json:"quotePrecision"`
 	MaxOrderAmt         string `json:"maxOrderAmt"`
 	MinOrderAmt         string `jsoN:"minOrderAmt"`
+}
+
+type MarketOrderBookResponse struct {
+	RetCode    int           `json:"retCode"`
+	RetMsg     string        `json:"retMsg"`
+	Result     OrderBookInfo `json:"result"`
+	RetExtInfo struct{}      `json:"retExtInfo"`
+	Time       int64         `json:"time"`
 }
 
 // type OrderBookEntry struct {
@@ -164,9 +180,25 @@ type TickerInfo struct {
 	UsdIndexPrice          string `json:"usdIndexPrice"`
 }
 
+type MarketTickersResponse struct {
+	RetCode    int           `json:"retCode"`
+	RetMsg     string        `json:"retMsg"`
+	Result     MarketTickers `json:"result"`
+	RetExtInfo struct{}      `json:"retExtInfo"`
+	Time       int64         `json:"time"`
+}
+
 type MarketTickers struct {
 	Category string        `json:"category"`
 	List     []*TickerInfo `json:"list"`
+}
+
+type MarketFundingRatesResponse struct {
+	RetCode    int         `json:"retCode"`
+	RetMsg     string      `json:"retMsg"`
+	Result     FundingRate `json:"result"`
+	RetExtInfo struct{}    `json:"retExtInfo"`
+	Time       int64       `json:"time"`
 }
 
 type FundingRateInfo struct {
@@ -195,6 +227,22 @@ type PublicRecentTradeHistory struct {
 	List     []TradeInfo `json:"list"`
 }
 
+type GetPublicRecentTradesResponse struct {
+	RetCode    int                      `json:"retCode"`
+	RetMsg     string                   `json:"retMsg"`
+	Result     PublicRecentTradeHistory `json:"result"`
+	RetExtInfo struct{}                 `json:"retExtInfo"`
+	Time       int64                    `json:"time"`
+}
+
+type GetOpenInterestsResponse struct {
+	RetCode    int              `json:"retCode"`
+	RetMsg     string           `json:"retMsg"`
+	Result     OpenInterestInfo `json:"result"`
+	RetExtInfo struct{}         `json:"retExtInfo"`
+	Time       int64            `json:"time"`
+}
+
 type OpenInterestInfo struct {
 	Category       string         `json:"category"`
 	Symbol         string         `json:"symbol"`
@@ -218,6 +266,14 @@ type HistoricalVolatilityInfo struct {
 	List     []VolatilityData `json:"result"`
 }
 
+type GetInsuranceInfoResponse struct {
+	RetCode    int                 `json:"retCode"`
+	RetMsg     string              `json:"retMsg"`
+	Result     MarketInsuranceInfo `json:"result"`
+	RetExtInfo struct{}            `json:"retExtInfo"`
+	Time       int64               `json:"time"`
+}
+
 type InsuranceData struct {
 	Coin    string `json:"coin"`
 	Balance string `json:"balance"`
@@ -227,6 +283,14 @@ type InsuranceData struct {
 type MarketInsuranceInfo struct {
 	UpdatedTime string          `json:"updatedTime"`
 	List        []InsuranceData `json:"list"`
+}
+
+type GetRiskLimitResponse struct {
+	RetCode    int                 `json:"retCode"`
+	RetMsg     string              `json:"retMsg"`
+	Result     MarketRiskLimitInfo `json:"result"`
+	RetExtInfo struct{}            `json:"retExtInfo"`
+	Time       int64               `json:"time"`
 }
 
 type RiskLimitData struct {
@@ -244,6 +308,14 @@ type MarketRiskLimitInfo struct {
 	List     []RiskLimitData `json:"list"`
 }
 
+type GetDeliveryPriceResponse struct {
+	RetCode    int               `json:"retCode"`
+	RetMsg     string            `json:"retMsg"`
+	Result     DeliveryPriceInfo `json:"result"`
+	RetExtInfo struct{}          `json:"retExtInfo"`
+	Time       int64             `json:"time"`
+}
+
 type DeliveryPriceData struct {
 	Symbol        string `json:"symbol"`
 	DeliveryPrice string `json:"deliveryPrice"`
@@ -254,6 +326,14 @@ type DeliveryPriceInfo struct {
 	Category       string              `json:"category"`
 	List           []DeliveryPriceData `json:"list"`
 	NextPageCursor string              `json:"nextPageCursor"`
+}
+
+type GetMarketLSRatioResponse struct {
+	RetCode    int                      `json:"retCode"`
+	RetMsg     string                   `json:"retMsg"`
+	Result     MarketLongShortRatioInfo `json:"result"`
+	RetExtInfo struct{}                 `json:"retExtInfo"`
+	Time       int64                    `json:"time"`
 }
 
 type LongShortRatioData struct {

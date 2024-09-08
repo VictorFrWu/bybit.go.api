@@ -6,34 +6,26 @@ import (
 	"net/http"
 )
 
-type AccountClient struct {
-	c      *Client
-	params map[string]interface{}
-}
-
-func (s *AccountClient) GetTransactionLog(ctx context.Context, opts ...RequestOption) (res *ServerResponse, err error) {
+func (s *BybitClientRequest) GetTransactionLog(ctx context.Context, opts ...RequestOption) (res *ServerResponse, err error) {
 	if err = handlers.ValidateParams(s.params); err != nil {
 		return nil, err
 	}
+	var endpoint string
+	if s.isUta {
+		endpoint = "/v5/account/transaction-log"
+	} else {
+		endpoint = "/v5/account/contract-transaction-log"
+	}
 	r := &request{
 		method:   http.MethodGet,
-		endpoint: "/v5/account/transaction-log",
+		endpoint: endpoint,
 		secType:  secTypeSigned,
 	}
-	r.setParams(s.params)
-	data, err := s.c.callAPI(ctx, r, opts...)
-	if err != nil {
-		return nil, err
-	}
-	res = new(ServerResponse)
-	err = json.Unmarshal(data, res)
-	if err != nil {
-		return nil, err
-	}
-	return res, nil
+	data := SendRequest(ctx, opts, r, s, err)
+	return GetServerResponse(err, data)
 }
 
-func (s *AccountClient) GetFeeRates(ctx context.Context, opts ...RequestOption) (res *ServerResponse, err error) {
+func (s *BybitClientRequest) GetFeeRates(ctx context.Context, opts ...RequestOption) (res *ServerResponse, err error) {
 	if err = handlers.ValidateParams(s.params); err != nil {
 		return nil, err
 	}
@@ -42,20 +34,11 @@ func (s *AccountClient) GetFeeRates(ctx context.Context, opts ...RequestOption) 
 		endpoint: "/v5/account/fee-rate",
 		secType:  secTypeSigned,
 	}
-	r.setParams(s.params)
-	data, err := s.c.callAPI(ctx, r, opts...)
-	if err != nil {
-		return nil, err
-	}
-	res = new(ServerResponse)
-	err = json.Unmarshal(data, res)
-	if err != nil {
-		return nil, err
-	}
-	return res, nil
+	data := SendRequest(ctx, opts, r, s, err)
+	return GetServerResponse(err, data)
 }
 
-func (s *AccountClient) GetAccountWallet(ctx context.Context, opts ...RequestOption) (res *ServerResponse, err error) {
+func (s *BybitClientRequest) GetAccountWallet(ctx context.Context, opts ...RequestOption) (res *ServerResponse, err error) {
 	if err = handlers.ValidateParams(s.params); err != nil {
 		return nil, err
 	}
@@ -64,20 +47,11 @@ func (s *AccountClient) GetAccountWallet(ctx context.Context, opts ...RequestOpt
 		endpoint: "/v5/account/wallet-balance",
 		secType:  secTypeSigned,
 	}
-	r.setParams(s.params)
-	data, err := s.c.callAPI(ctx, r, opts...)
-	if err != nil {
-		return nil, err
-	}
-	res = new(ServerResponse)
-	err = json.Unmarshal(data, res)
-	if err != nil {
-		return nil, err
-	}
-	return res, nil
+	data := SendRequest(ctx, opts, r, s, err)
+	return GetServerResponse(err, data)
 }
 
-func (s *AccountClient) GetBorrowHistory(ctx context.Context, opts ...RequestOption) (res *ServerResponse, err error) {
+func (s *BybitClientRequest) GetBorrowHistory(ctx context.Context, opts ...RequestOption) (res *ServerResponse, err error) {
 	if err = handlers.ValidateParams(s.params); err != nil {
 		return nil, err
 	}
@@ -86,20 +60,11 @@ func (s *AccountClient) GetBorrowHistory(ctx context.Context, opts ...RequestOpt
 		endpoint: "/v5/account/borrow-history",
 		secType:  secTypeSigned,
 	}
-	r.setParams(s.params)
-	data, err := s.c.callAPI(ctx, r, opts...)
-	if err != nil {
-		return nil, err
-	}
-	res = new(ServerResponse)
-	err = json.Unmarshal(data, res)
-	if err != nil {
-		return nil, err
-	}
-	return res, nil
+	data := SendRequest(ctx, opts, r, s, err)
+	return GetServerResponse(err, data)
 }
 
-func (s *AccountClient) GetCoinGreeks(ctx context.Context, opts ...RequestOption) (res *ServerResponse, err error) {
+func (s *BybitClientRequest) GetCoinGreeks(ctx context.Context, opts ...RequestOption) (res *ServerResponse, err error) {
 	if err = handlers.ValidateParams(s.params); err != nil {
 		return nil, err
 	}
@@ -108,20 +73,11 @@ func (s *AccountClient) GetCoinGreeks(ctx context.Context, opts ...RequestOption
 		endpoint: "/v5/asset/coin-greeks",
 		secType:  secTypeSigned,
 	}
-	r.setParams(s.params)
-	data, err := s.c.callAPI(ctx, r, opts...)
-	if err != nil {
-		return nil, err
-	}
-	res = new(ServerResponse)
-	err = json.Unmarshal(data, res)
-	if err != nil {
-		return nil, err
-	}
-	return res, nil
+	data := SendRequest(ctx, opts, r, s, err)
+	return GetServerResponse(err, data)
 }
 
-func (s *AccountClient) GetCollateralInfo(ctx context.Context, opts ...RequestOption) (res *ServerResponse, err error) {
+func (s *BybitClientRequest) GetCollateralInfo(ctx context.Context, opts ...RequestOption) (res *ServerResponse, err error) {
 	if err = handlers.ValidateParams(s.params); err != nil {
 		return nil, err
 	}
@@ -130,159 +86,106 @@ func (s *AccountClient) GetCollateralInfo(ctx context.Context, opts ...RequestOp
 		endpoint: "/v5/account/collateral-info",
 		secType:  secTypeSigned,
 	}
-	r.setParams(s.params)
-	data, err := s.c.callAPI(ctx, r, opts...)
-	if err != nil {
-		return nil, err
-	}
-	res = new(ServerResponse)
-	err = json.Unmarshal(data, res)
-	if err != nil {
-		return nil, err
-	}
-	return res, nil
+	data := SendRequest(ctx, opts, r, s, err)
+	return GetServerResponse(err, data)
 }
 
-func (s *AccountClient) GetAccountInfo(ctx context.Context, opts ...RequestOption) (res *ServerResponse, err error) {
+func (s *BybitClientRequest) GetAccountInfo(ctx context.Context, opts ...RequestOption) (res *ServerResponse, err error) {
 	r := &request{
 		method:   http.MethodGet,
 		endpoint: "/v5/account/info",
 		secType:  secTypeSigned,
 	}
-	data, err := s.c.callAPI(ctx, r, opts...)
-	if err != nil {
-		return nil, err
-	}
-	res = new(ServerResponse)
-	err = json.Unmarshal(data, res)
-	if err != nil {
-		return nil, err
-	}
-	return res, nil
+	data := SendRequest(ctx, opts, r, s, err)
+	return GetServerResponse(err, data)
 }
 
-func (s *AccountClient) GetMMPState(ctx context.Context, opts ...RequestOption) (res *ServerResponse, err error) {
+func (s *BybitClientRequest) GetMMPState(ctx context.Context, opts ...RequestOption) (res *ServerResponse, err error) {
 	r := &request{
 		method:   http.MethodGet,
 		endpoint: "/v5/account/mmp-state",
 		secType:  secTypeSigned,
 	}
-	data, err := s.c.callAPI(ctx, r, opts...)
-	if err != nil {
-		return nil, err
-	}
-	res = new(ServerResponse)
-	err = json.Unmarshal(data, res)
-	if err != nil {
-		return nil, err
-	}
-	return res, nil
+	data := SendRequest(ctx, opts, r, s, err)
+	return GetServerResponse(err, data)
 }
 
-func (s *AccountClient) SetSpotHedgeMode(ctx context.Context, opts ...RequestOption) (res *ServerResponse, err error) {
+func (s *BybitClientRequest) SetSpotHedgeMode(ctx context.Context, opts ...RequestOption) (res *ServerResponse, err error) {
 	r := &request{
 		method:   http.MethodGet,
 		endpoint: "/v5/account/set-hedging-mode",
 		secType:  secTypeSigned,
 	}
-	data, err := s.c.callAPI(ctx, r, opts...)
-	if err != nil {
-		return nil, err
-	}
-	res = new(ServerResponse)
-	err = json.Unmarshal(data, res)
-	if err != nil {
-		return nil, err
-	}
-	return res, nil
+	data := SendRequest(ctx, opts, r, s, err)
+	return GetServerResponse(err, data)
 }
 
-func (s *AccountClient) UpgradeToUTA(ctx context.Context, opts ...RequestOption) (res *ServerResponse, err error) {
+func (s *BybitClientRequest) UpgradeToUTA(ctx context.Context, opts ...RequestOption) (res *ServerResponse, err error) {
 	r := &request{
 		method:   http.MethodPost,
 		endpoint: "/v5/account/upgrade-to-uta",
 		secType:  secTypeSigned,
 	}
-	data, err := s.c.callAPI(ctx, r, opts...)
-	if err != nil {
-		return nil, err
-	}
-	res = new(ServerResponse)
-	err = json.Unmarshal(data, res)
-	if err != nil {
-		return nil, err
-	}
-	return res, nil
+	data := SendRequest(ctx, opts, r, s, err)
+	return GetServerResponse(err, data)
 }
 
-func (s *AccountClient) SetCollateralCoin(ctx context.Context, opts ...RequestOption) (res *ServerResponse, err error) {
+func (s *BybitClientRequest) SetCollateralCoin(ctx context.Context, opts ...RequestOption) (res *ServerResponse, err error) {
 	r := &request{
 		method:   http.MethodPost,
 		endpoint: "/v5/account/set-collateral-switch",
 		secType:  secTypeSigned,
 	}
-	data, err := s.c.callAPI(ctx, r, opts...)
-	if err != nil {
-		return nil, err
-	}
-	res = new(ServerResponse)
-	err = json.Unmarshal(data, res)
-	if err != nil {
-		return nil, err
-	}
-	return res, nil
+	data := SendRequest(ctx, opts, r, s, err)
+	return GetServerResponse(err, data)
 }
 
-func (s *AccountClient) SetMarginMode(ctx context.Context, opts ...RequestOption) (res *ServerResponse, err error) {
+func (s *BybitClientRequest) SetMarginMode(ctx context.Context, opts ...RequestOption) (res *ServerResponse, err error) {
 	r := &request{
 		method:   http.MethodPost,
 		endpoint: "/v5/account/set-margin-mode",
 		secType:  secTypeSigned,
 	}
-	data, err := s.c.callAPI(ctx, r, opts...)
-	if err != nil {
-		return nil, err
-	}
-	res = new(ServerResponse)
-	err = json.Unmarshal(data, res)
-	if err != nil {
-		return nil, err
-	}
-	return res, nil
+	data := SendRequest(ctx, opts, r, s, err)
+	return GetServerResponse(err, data)
 }
 
-func (s *AccountClient) SetMarketMakerProtection(ctx context.Context, opts ...RequestOption) (res *ServerResponse, err error) {
+func (s *BybitClientRequest) SetMarketMakerProtection(ctx context.Context, opts ...RequestOption) (res *ServerResponse, err error) {
 	r := &request{
 		method:   http.MethodPost,
 		endpoint: "/v5/account/mmp-modify",
 		secType:  secTypeSigned,
 	}
-	data, err := s.c.callAPI(ctx, r, opts...)
-	if err != nil {
-		return nil, err
-	}
-	res = new(ServerResponse)
-	err = json.Unmarshal(data, res)
-	if err != nil {
-		return nil, err
-	}
-	return res, nil
+	data := SendRequest(ctx, opts, r, s, err)
+	return GetServerResponse(err, data)
 }
 
-func (s *AccountClient) ResetMarketMakerProtection(ctx context.Context, opts ...RequestOption) (res *ServerResponse, err error) {
+func (s *BybitClientRequest) ResetMarketMakerProtection(ctx context.Context, opts ...RequestOption) (res *ServerResponse, err error) {
 	r := &request{
 		method:   http.MethodPost,
 		endpoint: "/v5/account/mmp-reset",
 		secType:  secTypeSigned,
 	}
-	data, err := s.c.callAPI(ctx, r, opts...)
-	if err != nil {
-		return nil, err
+	data := SendRequest(ctx, opts, r, s, err)
+	return GetServerResponse(err, data)
+}
+
+func (s *BybitClientRequest) GetDisconnectProtectionInfo(ctx context.Context, opts ...RequestOption) (res *ServerResponse, err error) {
+	r := &request{
+		method:   http.MethodGet,
+		endpoint: "/v5/account/query-dcp-info",
+		secType:  secTypeSigned,
 	}
-	res = new(ServerResponse)
-	err = json.Unmarshal(data, res)
-	if err != nil {
-		return nil, err
+	data := SendRequest(ctx, opts, r, s, err)
+	return GetServerResponse(err, data)
+}
+
+func (s *BybitClientRequest) GetSelfMarketProtectionGroup(ctx context.Context, opts ...RequestOption) (res *ServerResponse, err error) {
+	r := &request{
+		method:   http.MethodGet,
+		endpoint: "/v5/account/smp-group",
+		secType:  secTypeSigned,
 	}
-	return res, nil
+	data := SendRequest(ctx, opts, r, s, err)
+	return GetServerResponse(err, data)
 }

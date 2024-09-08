@@ -6,12 +6,7 @@ import (
 	"net/http"
 )
 
-type SpotLeverageClient struct {
-	c      *Client
-	params map[string]interface{}
-}
-
-func (s *SpotLeverageClient) GetLeverageTokenInfo(ctx context.Context, opts ...RequestOption) (res *ServerResponse, err error) {
+func (s *BybitClientRequest) GetLeverageTokenInfo(ctx context.Context, opts ...RequestOption) (res *ServerResponse, err error) {
 	if err = handlers.ValidateParams(s.params); err != nil {
 		return nil, err
 	}
@@ -20,20 +15,11 @@ func (s *SpotLeverageClient) GetLeverageTokenInfo(ctx context.Context, opts ...R
 		endpoint: "/v5/spot-lever-token/info",
 		secType:  secTypeSigned,
 	}
-	r.setParams(s.params)
-	data, err := s.c.callAPI(ctx, r, opts...)
-	if err != nil {
-		return nil, err
-	}
-	res = new(ServerResponse)
-	err = json.Unmarshal(data, res)
-	if err != nil {
-		return nil, err
-	}
-	return res, nil
+	data := SendRequest(ctx, opts, r, s, err)
+	return GetServerResponse(err, data)
 }
 
-func (s *SpotLeverageClient) GetLeverageTokenOrders(ctx context.Context, opts ...RequestOption) (res *ServerResponse, err error) {
+func (s *BybitClientRequest) GetLeverageTokenOrders(ctx context.Context, opts ...RequestOption) (res *ServerResponse, err error) {
 	if err = handlers.ValidateParams(s.params); err != nil {
 		return nil, err
 	}
@@ -42,20 +28,11 @@ func (s *SpotLeverageClient) GetLeverageTokenOrders(ctx context.Context, opts ..
 		endpoint: "/v5/spot-lever-token/order-record",
 		secType:  secTypeSigned,
 	}
-	r.setParams(s.params)
-	data, err := s.c.callAPI(ctx, r, opts...)
-	if err != nil {
-		return nil, err
-	}
-	res = new(ServerResponse)
-	err = json.Unmarshal(data, res)
-	if err != nil {
-		return nil, err
-	}
-	return res, nil
+	data := SendRequest(ctx, opts, r, s, err)
+	return GetServerResponse(err, data)
 }
 
-func (s *SpotLeverageClient) GetLeverageTokenMarket(ctx context.Context, opts ...RequestOption) (res *ServerResponse, err error) {
+func (s *BybitClientRequest) GetLeverageTokenMarket(ctx context.Context, opts ...RequestOption) (res *ServerResponse, err error) {
 	if err = handlers.ValidateParams(s.params); err != nil {
 		return nil, err
 	}
@@ -64,20 +41,11 @@ func (s *SpotLeverageClient) GetLeverageTokenMarket(ctx context.Context, opts ..
 		endpoint: "/v5/spot-lever-token/reference",
 		secType:  secTypeSigned,
 	}
-	r.setParams(s.params)
-	data, err := s.c.callAPI(ctx, r, opts...)
-	if err != nil {
-		return nil, err
-	}
-	res = new(ServerResponse)
-	err = json.Unmarshal(data, res)
-	if err != nil {
-		return nil, err
-	}
-	return res, nil
+	data := SendRequest(ctx, opts, r, s, err)
+	return GetServerResponse(err, data)
 }
 
-func (s *SpotLeverageClient) PurchaseLeverageToken(ctx context.Context, opts ...RequestOption) (res *ServerResponse, err error) {
+func (s *BybitClientRequest) PurchaseLeverageToken(ctx context.Context, opts ...RequestOption) (res *ServerResponse, err error) {
 	if err = handlers.ValidateParams(s.params); err != nil {
 		return nil, err
 	}
@@ -86,20 +54,11 @@ func (s *SpotLeverageClient) PurchaseLeverageToken(ctx context.Context, opts ...
 		endpoint: "/v5/spot-lever-token/purchase",
 		secType:  secTypeSigned,
 	}
-	r.setParams(s.params)
-	data, err := s.c.callAPI(ctx, r, opts...)
-	if err != nil {
-		return nil, err
-	}
-	res = new(ServerResponse)
-	err = json.Unmarshal(data, res)
-	if err != nil {
-		return nil, err
-	}
-	return res, nil
+	data := SendRequest(ctx, opts, r, s, err)
+	return GetServerResponse(err, data)
 }
 
-func (s *SpotLeverageClient) RedeemLeverageToken(ctx context.Context, opts ...RequestOption) (res *ServerResponse, err error) {
+func (s *BybitClientRequest) RedeemLeverageToken(ctx context.Context, opts ...RequestOption) (res *ServerResponse, err error) {
 	if err = handlers.ValidateParams(s.params); err != nil {
 		return nil, err
 	}
@@ -108,15 +67,6 @@ func (s *SpotLeverageClient) RedeemLeverageToken(ctx context.Context, opts ...Re
 		endpoint: "/v5/spot-lever-token/redeem",
 		secType:  secTypeSigned,
 	}
-	r.setParams(s.params)
-	data, err := s.c.callAPI(ctx, r, opts...)
-	if err != nil {
-		return nil, err
-	}
-	res = new(ServerResponse)
-	err = json.Unmarshal(data, res)
-	if err != nil {
-		return nil, err
-	}
-	return res, nil
+	data := SendRequest(ctx, opts, r, s, err)
+	return GetServerResponse(err, data)
 }
