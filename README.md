@@ -2,6 +2,7 @@
 [![GO 1.21.0](https://img.shields.io/badge/Go-1.21.0-brightgreen.svg)](https://github.com/VictorFrWu/bybit-go-api)   [![Contributor Victor](https://img.shields.io/badge/contributor-Victor-blue.svg)](https://github.com/wuhewuhe/bybit-go-api)   [![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](https://github.com/VictorFrWu/bybit-go-api/blob/main/LICENSE)
 ## Table of Contents
 - [About](#about)
+- [Release](#release)
 - [Development](#development)
 - [Installation](#installation)
 - [Usage](#usage)
@@ -27,7 +28,7 @@ Initially conceptualized by go developer Victor, this module is now maintained b
 
 Your contributions are most welcome!
 
-## Release Note
+## Release
 - refactor all the project
 - Market endpoints:
   - add server response adapter
@@ -94,7 +95,7 @@ Note: Replace placeholders (like YOUR_API_KEY, links, or other details) with the
 ```go
 client := bybit.NewBybitHttpClient("YOUR_API_KEY", "YOUR_API_SECRET", bybit.WithBaseURL(bybit.TESTNET))
 params := map[string]interface{}{"category": "linear", "symbol": "BTCUSDT", "side": "Buy", "positionIdx": 0, "orderType": "Limit", "qty": "0.001", "price": "10000", "timeInForce": "GTC"}
-orderResult, err := client.NewTradeService(params).PlaceOrder(context.Background())
+orderResult, err := client.NewUtaBybitServiceWithParams(params).PlaceOrder(context.Background())
 if err != nil {
 	fmt.Println(err)
 	return
@@ -146,7 +147,7 @@ params := map[string]interface{}{"category": "option",
 		},
 	},
 }
-orderResult, err := client.NewTradeService(params).PlaceBatchOrder(context.Background())
+orderResult, err := client.NewUtaBybitServiceWithParams(params).PlaceBatchOrder(context.Background())
 if err != nil {
 	fmt.Println(err)
 	return
@@ -158,7 +159,7 @@ fmt.Println(bybit.PrettyPrint(orderResult))
 ```go
 client := bybit.NewBybitHttpClient("YOUR_API_KEY", "YOUR_API_SECRET", bybit.WithBaseURL(bybit.TESTNET))
 params := map[string]interface{}{"category": "linear", "settleCoin": "USDT", "limit": 10}
-orderResult, err := client.NewPositionService(params).GetPositionList(context.Background())
+orderResult, err := client.NewUtaBybitServiceWithParams(params).GetPositionList(context.Background())
 if err != nil {
 	fmt.Println(err)
 	return
@@ -170,7 +171,7 @@ fmt.Println(bybit.PrettyPrint(orderResult))
 ```go
 client := bybit.NewBybitHttpClient("YOUR_API_KEY", "YOUR_API_SECRET", bybit.WithBaseURL(bybit.TESTNET))
 params := map[string]interface{}{"accountType": "UNIFIED", "category": "linear"}
-accountResult, err := client.NewAccountService(params).GetTransactionLog(context.Background())
+accountResult, err := client.NewUtaBybitServiceWithParams(params).GetTransactionLog(context.Background())
 if err != nil {
 	fmt.Println(err)
 	return
@@ -207,7 +208,7 @@ List of other contributors
 <table>
   <tr>
     <td align="center">
-        <a href="https://github.com/wuhewuhe">
+        <a href="https://github.com/VictorFrWu">
             <img src="https://avatars.githubusercontent.com/u/32245754?v=4" width="100px;" alt=""/>
             <br />
             <sub>   
@@ -215,8 +216,8 @@ List of other contributors
             </sub>
         </a>
         <br />
-        <a href="https://github.com/wuhewuhe/bybit-java-api/commits?author=wuhewuhe" title="Code">💻</a>
-        <a href="https://github.com/wuhewuhe/bybit-java-api/commits?author=wuhewuhe" title="Documentation">📖</a>
+        <a href="https://github.com/VictorFrWu/bybit.go.api/commits?author=wuhewuhe" title="Code">💻</a>
+        <a href="https://github.com/VictorFrWu/bybit.go.api/commits?author=wuhewuhe" title="Documentation">📖</a>
     </td>
   </tr>
 </table>
