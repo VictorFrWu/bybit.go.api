@@ -11,6 +11,7 @@ import (
 	"io"
 	"log"
 	"net/http"
+	"net/url"
 	"os"
 	"strconv"
 	"time"
@@ -75,6 +76,7 @@ type Client struct {
 	Debug      bool
 	Logger     *log.Logger
 	do         doFunc
+	ProxyURL   string
 }
 
 type doFunc func(req *http.Request) (*http.Response, error)
@@ -92,6 +94,13 @@ func WithDebug(debug bool) ClientOption {
 func WithBaseURL(baseURL string) ClientOption {
 	return func(c *Client) {
 		c.BaseURL = baseURL
+	}
+}
+
+// WithProxyURL is a client option to set the proxy url
+func WithProxyURL(proxyURL string) ClientOption {
+	return func(c *Client) {
+		c.ProxyURL = proxyURL
 	}
 }
 
@@ -139,6 +148,17 @@ func NewBybitHttpClient(apiKey string, APISecret string, options ...ClientOption
 	// Apply the provided options
 	for _, opt := range options {
 		opt(c)
+	}
+
+	if c.ProxyURL != "" {
+		proxyURL, err := url.Parse(c.ProxyURL)
+		if err != nil {
+			c.Logger.Printf("Error parsing proxy URL: %v", err)
+			return nil // Or handle this more gracefully
+		}
+		c.HTTPClient.Transport = &http.Transport{
+			Proxy: http.ProxyURL(proxyURL),
+		}
 	}
 
 	return c
