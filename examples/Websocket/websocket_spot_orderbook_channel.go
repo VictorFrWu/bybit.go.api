@@ -10,6 +10,6 @@ func main() {
 		fmt.Println("Received:", message)
 		return nil
 	})
-	_ = ws.Connect([]string{"orderbook.1.BTCUSDT"})
+	_, _ = ws.Connect().SendSubscription([]string{"orderbook.1.BTCUSDT", "orderbook.1.ETHUSDT"})
 	select {}
 }

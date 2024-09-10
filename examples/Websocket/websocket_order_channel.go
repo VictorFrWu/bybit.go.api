@@ -10,6 +10,6 @@ func main() {
 		fmt.Println("Received:", message)
 		return nil
 	}, bybit.WithPingInterval(2))
-	_ = ws.Connect([]string{"order"})
+	_, _ = ws.Connect().SendSubscription([]string{"order", "position", "wallet"})
 	select {}
 }
