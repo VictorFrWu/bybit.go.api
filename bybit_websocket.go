@@ -137,7 +137,7 @@ func (b *WebSocket) Connect() *WebSocket {
 	go b.monitorConnection()
 
 	b.ctx, b.cancel = context.WithCancel(context.Background())
-	ping(b)
+	go ping(b)
 
 	return b
 }
