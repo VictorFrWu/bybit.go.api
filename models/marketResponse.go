@@ -95,8 +95,12 @@ type SpotInstrument struct {
 	LotSizeFilter      LotSizeFilter  `json:"lotSizeFilter"`
 	UnifiedMarginTrade bool           `json:"unifiedMarginTrade"`
 	FundingInterval    int            `json:"fundingInterval"`
+	UpperFundingRate   string         `json:"upperFundingRate"`
+	LowerFundingRate   string         `json:"lowerFundingRate"`
 	SettleCoin         string         `json:"settleCoin"`
 	CopyTrading        string         `json:"copyTrading"`
+	IsPreListing       bool           `json:"isPreListing"`
+	PreListingInfo     string         `json:"preListingInfo"`
 }
 
 type LeverageFilter struct {
@@ -115,11 +119,9 @@ type LotSizeFilter struct {
 	MaxOrderQty         string `json:"maxOrderQty"`
 	MinOrderQty         string `json:"minOrderQty"`
 	QtyStep             string `json:"qtyStep"`
+	MaxMktOrderQty      string `json:"maxMktOrderQty"`
+	MinNotionalValue    string `json:"minNotionalValue"`
 	PostOnlyMaxOrderQty string `json:"postOnlyMaxOrderQty"`
-	BasePrecision       string `json:"basePrecision"`
-	QuotePrecision      string `json:"quotePrecision"`
-	MaxOrderAmt         string `json:"maxOrderAmt"`
-	MinOrderAmt         string `jsoN:"minOrderAmt"`
 }
 
 type MarketOrderBookResponse struct {

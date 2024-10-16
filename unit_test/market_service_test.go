@@ -390,12 +390,11 @@ func (s *marketTestSuite) TestInstrumentsInfo() {
                     "status": "Trading",
                     "marginTrading": "both",
                     "lotSizeFilter": {
-                    "basePrecision": "0.000001",
-                    "quotePrecision": "0.00000001",
-                    "minOrderQty": "0.000048",
-                    "maxOrderQty": "71.73956243",
-                    "minOrderAmt": "1",
-                    "maxOrderAmt": "2000000"
+						"minOrderQty": "0.000048",
+						"maxOrderQty": "71.73956243",
+						"minNotionalValue": "5.00",
+						"maxMktOrderQty": "10.0",
+						"postOnlyMaxOrderQty": "71.73956243"
                     },
                     "priceFilter": {
                     "tickSize": "0.01"
@@ -446,11 +445,11 @@ func (s *marketTestSuite) TestInstrumentsInfo() {
 				Status:        "Trading",
 				MarginTrading: "both",
 				LotSizeFilter: models.LotSizeFilter{
-					BasePrecision:  "0.000001",
-					QuotePrecision: "0.00000001",
-					MinOrderQty:    "0.000048",
-					MaxOrderQty:    "71.73956243", MinOrderAmt: "1",
-					MaxOrderAmt: "2000000",
+					MinOrderQty:         "0.000048",
+					MaxOrderQty:         "71.73956243",
+					MinNotionalValue:    "5.00",
+					MaxMktOrderQty:      "10.0",
+					PostOnlyMaxOrderQty: "71.73956243",
 				},
 				PriceFilter: models.PriceFilter{
 					TickSize: "0.01",
