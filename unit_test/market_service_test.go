@@ -1,12 +1,11 @@
 package bybit_connector_test
 
 import (
-	"github.com/wuhewuhe/bybit.go.api"
 	"net/http"
 	"testing"
 
+	"github.com/bybit-exchange/bybit.go.api/models"
 	"github.com/stretchr/testify/suite"
-	"github.com/wuhewuhe/bybit.go.api/models"
 )
 
 type marketTestSuite struct {

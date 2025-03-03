@@ -1,5 +1,5 @@
 # bybit-go-api
-[![GO 1.21.0](https://img.shields.io/badge/Go-1.21.0-brightgreen.svg)](https://github.com/VictorFrWu/bybit-go-api)   [![Contributor Victor](https://img.shields.io/badge/contributor-Victor-blue.svg)](https://github.com/wuhewuhe/bybit-go-api)   [![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](https://github.com/VictorFrWu/bybit-go-api/blob/main/LICENSE)
+[![GO 1.21.0](https://img.shields.io/badge/Go-1.21.0-brightgreen.svg)](https://github.com/VictorFrWu/bybit-go-api)   [![Contributor Victor](https://img.shields.io/badge/contributor-Victor-blue.svg)](https://github.com/bybit-exchange/bybit-go-api)   [![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](https://github.com/VictorFrWu/bybit-go-api/blob/main/LICENSE)
 ## Table of Contents
 - [About](#about)
 - [Release](#release)
@@ -28,50 +28,6 @@ Initially conceptualized by go developer Victor, this module is now maintained b
 
 Your contributions are most welcome!
 
-## Release
-- refactor all the project
-- Market endpoints:
-  - add server response adapter
-- Position endpoints:
-  - SetPositionRiskLimit is deprecated;
-  - SetPositionTpslMode is deprecated.
-  - Add move position and history
-- trade
-  - Rename v5/execution/list to trade history
-- account
-  - Add transaction log to classical user
-  - Get DCP Info
-  - New endpoint /v5/account/smp-group
-- demo trading
-  - Add request coin endpoint
-- asset
-  - Add Get Convert Coin List
-  - Add Request a Quote
-  - Add Confirm a Quote
-  - Add Get Convert Status
-  - Add Get Convert history
-- user
-  - Query unlimited sub members 
-- spot margin uta
-   - GetSpotMarginCoin is deprecated.
-   - GetSpotMarginBorrowCoin is deprecated.
-   - GetSpotMarginLoanAccountInfo is deprecated.
-   - GetSpotMarginBorrowOrders is deprecated.
-   - GetSpotMarginRepaymentOrders is deprecated.
-   - BorrowSpotMarginLoan is deprecated.
-   - RepaySpotMarginLoan is deprecated.
-   - Add spot margin uta interest history
-- ins
-   - GetC2cLendingAccountInfo is deprecated.
-   - GetC2cLendingOrders is deprecated.
-   - GetC2cLendingCoinInfo is deprecated.
-   - C2cCancelRedeemFunds is deprecated.
-   - C2cRedeemFunds is deprecated.
-   - C2cDepositFunds is deprecated.
-   - Add associate ins loan id
-- broker
-  - Add Get Sub Account Deposit Records
-
 ## Development
 bybit-go-api is under active development with the latest features and updates from Bybit's API implemented promptly. The module utilizes minimal external libraries to provide a lightweight and efficient experience. If you've made enhancements or fixed bugs, please submit a pull request.
 
@@ -86,7 +42,7 @@ require (
 ```
 
 To import my package you need just to put the link to your go mode file
-**github.com/wuhewuhe/bybit.go.api**
+**github.com/bybit-exchange/bybit.go.api**
 
 ## Usage
 Note: Replace placeholders (like YOUR_API_KEY, links, or other details) with the actual information. You can also customize this template to better fit the actual state and details of your Java API.
@@ -216,8 +172,8 @@ List of other contributors
             </sub>
         </a>
         <br />
-        <a href="https://github.com/VictorFrWu/bybit.go.api/commits?author=wuhewuhe" title="Code">💻</a>
-        <a href="https://github.com/VictorFrWu/bybit.go.api/commits?author=wuhewuhe" title="Documentation">📖</a>
+        <a href="https://github.com/VictorFrWu/bybit.go.api/commits?author=bybit-exchange" title="Code">💻</a>
+        <a href="https://github.com/VictorFrWu/bybit.go.api/commits?author=bybit-exchange" title="Documentation">📖</a>
     </td>
   </tr>
 </table>
