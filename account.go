@@ -150,6 +150,9 @@ func (s *BybitClientRequest) SetMarginMode(ctx context.Context, opts ...RequestO
 		endpoint: "/v5/account/set-margin-mode",
 		secType:  secTypeSigned,
 	}
+
+	r.setParams(s.params)
+
 	data := SendRequest(ctx, opts, r, s, err)
 	return GetServerResponse(err, data)
 }
