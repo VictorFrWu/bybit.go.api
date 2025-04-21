@@ -11,7 +11,7 @@ func main() {
 }
 
 func SetPositionLeverage() {
-	client := bybit.NewBybitHttpClient("d08Wh6P037IXAvcrL2", "gLfd1BLGU9oq6YoRZRlwXkIQRYB4n5KvXDvv", bybit.WithBaseURL(bybit.TESTNET))
+	client := bybit.NewBybitHttpClient("YOUR_API_KEY", "YOUR_API_SECRET", bybit.WithBaseURL(bybit.TESTNET))
 	params := map[string]interface{}{"category": "linear", "symbol": "XRPUSDT", "buyLeverage": "20", "sellLeverage": "20"}
 	serverResult, err := client.NewUtaBybitServiceWithParams(params).SetPositionLeverage(context.Background())
 	if err != nil {

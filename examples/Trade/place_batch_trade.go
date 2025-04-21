@@ -11,7 +11,7 @@ func main() {
 }
 
 func PlaceBatchTrade() {
-	client := bybit.NewBybitHttpClient("8wYkmpLsMg10eNQyPm", "Ouxc34myDnXvei54XsBZgoQzfGxO4bkr2Zsj", bybit.WithBaseURL(bybit.TESTNET))
+	client := bybit.NewBybitHttpClient("YOUR_API_KEY", "YOUR_API_SECRET", bybit.WithBaseURL(bybit.TESTNET))
 	params := map[string]interface{}{"category": "option",
 		"request": []map[string]interface{}{
 			{
@@ -42,7 +42,7 @@ func PlaceBatchTrade() {
 			},
 		},
 	}
-	orderResult, err := client.NewTradeService(params).PlaceBatchOrder(context.Background())
+	orderResult, err := client.NewUtaBybitServiceWithParams(params).PlaceBatchOrder(context.Background())
 	if err != nil {
 		fmt.Println(err)
 		return

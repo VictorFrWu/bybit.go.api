@@ -158,11 +158,15 @@ func (b *WebSocket) SendSubscription(args []string) (*WebSocket, error) {
 	return b, nil
 }
 
-// sendRequest sends a custom request over the WebSocket connection.
-func (b *WebSocket) sendRequest(op string, args map[string]interface{}, headers map[string]string) error {
-	reqID := uuid.New().String()
+// SendRequest sendRequest sends a custom request over the WebSocket connection.
+func (b *WebSocket) SendRequest(op string, args map[string]interface{}, headers map[string]string, reqId ...string) (*WebSocket, error) {
+	finalReqId := uuid.New().String()
+	if len(reqId) > 0 && reqId[0] != "" {
+		finalReqId = reqId[0]
+	}
+
 	request := map[string]interface{}{
-		"reqId":  reqID,
+		"reqId":  finalReqId,
 		"header": headers,
 		"op":     op,
 		"args":   []interface{}{args},
@@ -170,7 +174,24 @@ func (b *WebSocket) sendRequest(op string, args map[string]interface{}, headers 
 	fmt.Println("request headers:", fmt.Sprintf("%v", request["header"]))
 	fmt.Println("request op channel:", fmt.Sprintf("%v", request["op"]))
 	fmt.Println("request msg:", fmt.Sprintf("%v", request["args"]))
-	return b.sendAsJson(request)
+	if err := b.sendAsJson(request); err != nil {
+		fmt.Println("Failed to send websocket trade request:", err)
+		return b, err
+	}
+	fmt.Println("Successfully sent websocket trade request.")
+	return b, nil
+}
+
+func (b *WebSocket) SendTradeRequest(tradeTruest map[string]interface{}) (*WebSocket, error) {
+	fmt.Println("trade request headers:", fmt.Sprintf("%v", tradeTruest["header"]))
+	fmt.Println("trade request op channel:", fmt.Sprintf("%v", tradeTruest["op"]))
+	fmt.Println("trade request msg:", fmt.Sprintf("%v", tradeTruest["args"]))
+	if err := b.sendAsJson(tradeTruest); err != nil {
+		fmt.Println("Failed to send websocket trade request:", err)
+		return b, err
+	}
+	fmt.Println("Successfully sent websocket trade request.")
+	return b, nil
 }
 
 func ping(b *WebSocket) {
@@ -215,8 +236,9 @@ func (b *WebSocket) Disconnect() error {
 }
 
 func (b *WebSocket) requiresAuthentication() bool {
-	return b.url == WEBSOCKET_PRIVATE_MAINNET ||
-		b.url == WEBSOCKET_PRIVATE_TESTNET || b.url == WEBSOCKET_TRADE_MAINNET || b.url == WEBSOCKET_TRADE_TESTNET || b.url == WEBSOCKET_TRADE_DEMO || b.url == WEBSOCKET_PRIVATE_DEMO
+	return b.url == WEBSOCKET_PRIVATE_MAINNET || b.url == WEBSOCKET_PRIVATE_TESTNET ||
+		b.url == WEBSOCKET_TRADE_MAINNET || b.url == WEBSOCKET_TRADE_TESTNET ||
+		b.url == WEBSOCKET_TRADE_DEMO || b.url == WEBSOCKET_PRIVATE_DEMO
 	// v3 offline
 	/*
 		b.url == V3_CONTRACT_PRIVATE ||
