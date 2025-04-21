@@ -21,6 +21,8 @@ Dive into a plethora of functionalities:
 - Private Websocket Streaming
 - Institution Loan 
 - Broker
+- Earn
+- Spread Trade
 
 bybit-go-api provides an official, robust, and high-performance go connector to Bybit's trading APIs.
 
