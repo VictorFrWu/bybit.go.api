@@ -11,7 +11,7 @@ func main() {
 }
 
 func GetAccountInfo() {
-	client := bybit.NewBybitHttpClient("X6wmWloIPvaLXAKqv2", "rY1CWGYLHy0AUjdNZqqspvd3Krhp79fHp1sP", bybit.WithBaseURL(bybit.TESTNET))
+	client := bybit.NewBybitHttpClient("YOUR_API_KEY", "YOUR_API_SECRET", bybit.WithBaseURL(bybit.TESTNET))
 	accountResult, err := client.NewUtaBybitServiceNoParams().GetAccountInfo(context.Background())
 	if err != nil {
 		fmt.Println(err)

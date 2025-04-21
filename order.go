@@ -6,35 +6,48 @@ import (
 )
 
 type Order struct {
-	c                *Client
-	category         string
-	symbol           string
-	isLeverage       *int
-	side             string
-	orderType        string
-	qty              string
-	price            *string
-	triggerDirection *int
-	orderFilter      *string
-	triggerPrice     *string
-	triggerBy        *string
-	orderIv          *string
-	timeInForce      *string
-	positionIdx      *int
-	orderLinkId      *string
-	takeProfit       *string
-	stopLoss         *string
-	tpTriggerBy      *string
-	slTriggerBy      *string
-	reduceOnly       *bool
-	closeOnTrigger   *bool
-	smpType          *string
-	mmp              *bool
-	tpslMode         *string
-	tpLimitPrice     *string
-	slLimitPrice     *string
-	tpOrderType      *string
-	slOrderType      *string
+	c                     *Client
+	category              string
+	symbol                string
+	isLeverage            *int
+	side                  string
+	orderType             string
+	qty                   string
+	price                 *string
+	triggerDirection      *int
+	orderFilter           *string
+	triggerPrice          *string
+	triggerBy             *string
+	orderIv               *string
+	timeInForce           *string
+	positionIdx           *int
+	orderLinkId           *string
+	takeProfit            *string
+	stopLoss              *string
+	tpTriggerBy           *string
+	slTriggerBy           *string
+	reduceOnly            *bool
+	closeOnTrigger        *bool
+	smpType               *string
+	mmp                   *bool
+	tpslMode              *string
+	tpLimitPrice          *string
+	slLimitPrice          *string
+	tpOrderType           *string
+	slOrderType           *string
+	marketUnit            *string
+	slippageToleranceType *string
+	slippageTolerance     *string
+}
+
+func (order *Order) SlippageToleranceType(slippageToleranceType string) *Order {
+	order.slippageToleranceType = &slippageToleranceType
+	return order
+}
+
+func (order *Order) SlippageTolerance(slippageTolerance string) *Order {
+	order.slippageTolerance = &slippageTolerance
+	return order
 }
 
 func (order *Order) TimeInForce(tif string) *Order {
@@ -152,6 +165,11 @@ func (order *Order) SlOrderType(orderType string) *Order {
 	return order
 }
 
+func (order *Order) MarketUnit(marketUnit string) *Order {
+	order.marketUnit = &marketUnit
+	return order
+}
+
 func (order *Order) Do(ctx context.Context, opts ...RequestOption) (res *ServerResponse, err error) {
 	r := &request{
 		method:   http.MethodPost,
@@ -167,6 +185,9 @@ func (order *Order) Do(ctx context.Context, opts ...RequestOption) (res *ServerR
 	}
 	if order.price != nil {
 		m["price"] = *order.price
+	}
+	if order.isLeverage != nil {
+		m["isLeverage"] = *order.isLeverage
 	}
 	if order.triggerDirection != nil {
 		m["triggerDirection"] = *order.triggerDirection
@@ -230,6 +251,15 @@ func (order *Order) Do(ctx context.Context, opts ...RequestOption) (res *ServerR
 	}
 	if order.slOrderType != nil {
 		m["slOrderType"] = *order.slOrderType
+	}
+	if order.marketUnit != nil {
+		m["marketUnit"] = *order.marketUnit
+	}
+	if order.slippageTolerance != nil {
+		m["slippageTolerance"] = *order.slippageTolerance
+	}
+	if order.slippageToleranceType != nil {
+		m["slippageToleranceType"] = *order.slippageToleranceType
 	}
 	r.setParams(m)
 	data, err := order.c.callAPI(ctx, r, opts...)
