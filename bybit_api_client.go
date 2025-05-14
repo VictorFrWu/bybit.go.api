@@ -231,7 +231,7 @@ func (c *Client) callAPI(ctx context.Context, r *request, opts ...RequestOption)
 	}
 	req = req.WithContext(ctx)
 	req.Header = r.header
-	c.debug("request: %#v", req)
+	// c.debug("request: %#v", req)
 	f := c.do
 	if f == nil {
 		f = c.HTTPClient.Do
