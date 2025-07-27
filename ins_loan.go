@@ -80,6 +80,7 @@ func (s *BybitClientRequest) AssociateInsLoan(ctx context.Context, opts ...Reque
 
 // Crypto Loan
 
+// Deprecated: BorrowCryptoLoan is deprecated.
 func (s *BybitClientRequest) BorrowCryptoLoan(ctx context.Context, opts ...RequestOption) (res *ServerResponse, err error) {
 	r := &request{
 		method:   http.MethodPost,
@@ -90,6 +91,7 @@ func (s *BybitClientRequest) BorrowCryptoLoan(ctx context.Context, opts ...Reque
 	return GetServerResponse(err, data)
 }
 
+// Deprecated: RepayCryptoLoan is deprecated.
 func (s *BybitClientRequest) RepayCryptoLoan(ctx context.Context, opts ...RequestOption) (res *ServerResponse, err error) {
 	r := &request{
 		method:   http.MethodPost,
@@ -100,6 +102,7 @@ func (s *BybitClientRequest) RepayCryptoLoan(ctx context.Context, opts ...Reques
 	return GetServerResponse(err, data)
 }
 
+// Deprecated: AdjustCryptoLoanToValue is deprecated.
 func (s *BybitClientRequest) AdjustCryptoLoanToValue(ctx context.Context, opts ...RequestOption) (res *ServerResponse, err error) {
 	r := &request{
 		method:   http.MethodPost,
@@ -110,6 +113,7 @@ func (s *BybitClientRequest) AdjustCryptoLoanToValue(ctx context.Context, opts .
 	return GetServerResponse(err, data)
 }
 
+// Deprecated: GetCryptoLoanCollateralInfo is deprecated.
 func (s *BybitClientRequest) GetCryptoLoanCollateralInfo(ctx context.Context, opts ...RequestOption) (res *ServerResponse, err error) {
 	r := &request{
 		method:   http.MethodGet,
@@ -120,6 +124,7 @@ func (s *BybitClientRequest) GetCryptoLoanCollateralInfo(ctx context.Context, op
 	return GetServerResponse(err, data)
 }
 
+// Deprecated: GetCryptoLoanBorrowInfo is deprecated.
 func (s *BybitClientRequest) GetCryptoLoanBorrowInfo(ctx context.Context, opts ...RequestOption) (res *ServerResponse, err error) {
 	r := &request{
 		method:   http.MethodGet,
@@ -130,6 +135,7 @@ func (s *BybitClientRequest) GetCryptoLoanBorrowInfo(ctx context.Context, opts .
 	return GetServerResponse(err, data)
 }
 
+// Deprecated: GetCryptoLoanBorrowLimit is deprecated.
 func (s *BybitClientRequest) GetCryptoLoanBorrowLimit(ctx context.Context, opts ...RequestOption) (res *ServerResponse, err error) {
 	r := &request{
 		method:   http.MethodGet,
@@ -140,6 +146,7 @@ func (s *BybitClientRequest) GetCryptoLoanBorrowLimit(ctx context.Context, opts 
 	return GetServerResponse(err, data)
 }
 
+// Deprecated: GetCryptoLoanUnpaidLoans is deprecated.
 func (s *BybitClientRequest) GetCryptoLoanUnpaidLoans(ctx context.Context, opts ...RequestOption) (res *ServerResponse, err error) {
 	r := &request{
 		method:   http.MethodGet,
@@ -150,6 +157,7 @@ func (s *BybitClientRequest) GetCryptoLoanUnpaidLoans(ctx context.Context, opts 
 	return GetServerResponse(err, data)
 }
 
+// Deprecated: GetCryptoLoanRepaymentHistory is deprecated.
 func (s *BybitClientRequest) GetCryptoLoanRepaymentHistory(ctx context.Context, opts ...RequestOption) (res *ServerResponse, err error) {
 	r := &request{
 		method:   http.MethodGet,
@@ -160,6 +168,7 @@ func (s *BybitClientRequest) GetCryptoLoanRepaymentHistory(ctx context.Context, 
 	return GetServerResponse(err, data)
 }
 
+// Deprecated: GetCryptoLoanBorrowHistory is deprecated.
 func (s *BybitClientRequest) GetCryptoLoanBorrowHistory(ctx context.Context, opts ...RequestOption) (res *ServerResponse, err error) {
 	r := &request{
 		method:   http.MethodGet,
@@ -170,6 +179,7 @@ func (s *BybitClientRequest) GetCryptoLoanBorrowHistory(ctx context.Context, opt
 	return GetServerResponse(err, data)
 }
 
+// Deprecated: GetCryptoLoanMaxCollateral is deprecated.
 func (s *BybitClientRequest) GetCryptoLoanMaxCollateral(ctx context.Context, opts ...RequestOption) (res *ServerResponse, err error) {
 	r := &request{
 		method:   http.MethodGet,
@@ -180,6 +190,7 @@ func (s *BybitClientRequest) GetCryptoLoanMaxCollateral(ctx context.Context, opt
 	return GetServerResponse(err, data)
 }
 
+// Deprecated: GetCryptoLoanAdjustHistory is deprecated.
 func (s *BybitClientRequest) GetCryptoLoanAdjustHistory(ctx context.Context, opts ...RequestOption) (res *ServerResponse, err error) {
 	r := &request{
 		method:   http.MethodGet,
@@ -190,6 +201,7 @@ func (s *BybitClientRequest) GetCryptoLoanAdjustHistory(ctx context.Context, opt
 	return GetServerResponse(err, data)
 }
 
+// Deprecated: GetCryptoLoanCompletedHistory is deprecated.
 func (s *BybitClientRequest) GetCryptoLoanCompletedHistory(ctx context.Context, opts ...RequestOption) (res *ServerResponse, err error) {
 	r := &request{
 		method:   http.MethodGet,
@@ -200,7 +212,7 @@ func (s *BybitClientRequest) GetCryptoLoanCompletedHistory(ctx context.Context, 
 	return GetServerResponse(err, data)
 }
 
-// Crypto Loan End
+// C2C Loan End
 
 // Deprecated: GetC2cLendingCoinInfo is deprecated.
 func (s *BybitClientRequest) GetC2cLendingCoinInfo(ctx context.Context, opts ...RequestOption) (res *ServerResponse, err error) {

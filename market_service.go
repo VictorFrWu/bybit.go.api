@@ -284,3 +284,13 @@ func (s *BybitClientRequest) GetLongShortRatio(ctx context.Context, opts ...Requ
 	data, err := SendRequest(ctx, opts, r, s, err)
 	return GetServerResponse(err, data)
 }
+
+func (s *BybitClientRequest) GetOrderPriceLimit(ctx context.Context, opts ...RequestOption) (res *ServerResponse, err error) {
+	r := &request{
+		method:   http.MethodGet,
+		endpoint: "/v5/market/price-limit",
+		secType:  secTypeNone,
+	}
+	data, err := SendRequest(ctx, opts, r, s, err)
+	return GetServerResponse(err, data)
+}

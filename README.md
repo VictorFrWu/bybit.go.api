@@ -20,6 +20,7 @@ Dive into a plethora of functionalities:
 - Public Websocket Streaming
 - Private Websocket Streaming
 - Institution Loan 
+- Crypto Loan
 - Broker
 - Earn
 - Spread Trade
