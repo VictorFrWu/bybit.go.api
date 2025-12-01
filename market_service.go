@@ -195,6 +195,17 @@ func (s *BybitClientRequest) GetOrderBookInfo(ctx context.Context, opts ...Reque
 	return GetServerResponse(err, data)
 }
 
+// GetRPIOrderBook
+func (s *BybitClientRequest) GetRPIOrderBook(ctx context.Context, opts ...RequestOption) (res *ServerResponse, err error) {
+	r := &request{
+		method:   http.MethodGet,
+		endpoint: "/v5/market/rpi-orderbook",
+		secType:  secTypeNone,
+	}
+	data, err := SendRequest(ctx, opts, r, s, err)
+	return GetServerResponse(err, data)
+}
+
 func (s *BybitClientRequest) GetMarketTickers(ctx context.Context, opts ...RequestOption) (res *ServerResponse, err error) {
 	r := &request{
 		method:   http.MethodGet,
@@ -275,6 +286,17 @@ func (s *BybitClientRequest) GetDeliveryPrice(ctx context.Context, opts ...Reque
 	return GetServerResponse(err, data)
 }
 
+// GetNewDeliveryPrice
+func (s *BybitClientRequest) GetNewDeliveryPrice(ctx context.Context, opts ...RequestOption) (res *ServerResponse, err error) {
+	r := &request{
+		method:   http.MethodGet,
+		endpoint: "/v5/market/new-delivery-price",
+		secType:  secTypeNone,
+	}
+	data, err := SendRequest(ctx, opts, r, s, err)
+	return GetServerResponse(err, data)
+}
+
 func (s *BybitClientRequest) GetLongShortRatio(ctx context.Context, opts ...RequestOption) (res *ServerResponse, err error) {
 	r := &request{
 		method:   http.MethodGet,
@@ -290,6 +312,39 @@ func (s *BybitClientRequest) GetOrderPriceLimit(ctx context.Context, opts ...Req
 		method:   http.MethodGet,
 		endpoint: "/v5/market/price-limit",
 		secType:  secTypeNone,
+	}
+	data, err := SendRequest(ctx, opts, r, s, err)
+	return GetServerResponse(err, data)
+}
+
+// GetADLAlerts
+func (s *BybitClientRequest) GetADLAlerts(ctx context.Context, opts ...RequestOption) (res *ServerResponse, err error) {
+	r := &request{
+		method:   http.MethodGet,
+		endpoint: "/v5/market/adlAlert",
+		secType:  secTypeNone,
+	}
+	data, err := SendRequest(ctx, opts, r, s, err)
+	return GetServerResponse(err, data)
+}
+
+// GetIndexPriceComponents
+func (s *BybitClientRequest) GetIndexPriceComponents(ctx context.Context, opts ...RequestOption) (res *ServerResponse, err error) {
+	r := &request{
+		method:   http.MethodGet,
+		endpoint: "/v5/market/index-price-components",
+		secType:  secTypeNone,
+	}
+	data, err := SendRequest(ctx, opts, r, s, err)
+	return GetServerResponse(err, data)
+}
+
+// GetFeeGroupStructure
+func (s *BybitClientRequest) GetFeeGroupStructure(ctx context.Context, opts ...RequestOption) (res *ServerResponse, err error) {
+	r := &request{
+		method:   http.MethodGet,
+		endpoint: "/v5/market/fee-group-info",
+		secType:  secTypeSigned,
 	}
 	data, err := SendRequest(ctx, opts, r, s, err)
 	return GetServerResponse(err, data)
