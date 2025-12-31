@@ -6,6 +6,8 @@ import (
 	"crypto/sha256"
 	"encoding/hex"
 	"fmt"
+	"net/http"
+	"net/url"
 	"time"
 
 	"github.com/google/uuid"
@@ -69,6 +71,7 @@ type WebSocket struct {
 	ctx          context.Context
 	cancel       context.CancelFunc
 	isConnected  bool
+	proxyURL     string
 }
 
 type WebsocketOption func(*WebSocket)
@@ -82,6 +85,12 @@ func WithPingInterval(pingInterval int) WebsocketOption {
 func WithMaxAliveTime(maxAliveTime string) WebsocketOption {
 	return func(c *WebSocket) {
 		c.maxAliveTime = maxAliveTime
+	}
+}
+
+func WithWsProxyURL(proxyURL string) WebsocketOption {
+	return func(c *WebSocket) {
+		c.proxyURL = proxyURL
 	}
 }
 
@@ -119,7 +128,17 @@ func (b *WebSocket) Connect() *WebSocket {
 	if b.maxAliveTime != "" {
 		wssUrl += "?max_alive_time=" + b.maxAliveTime
 	}
-	b.conn, _, err = websocket.DefaultDialer.Dial(wssUrl, nil)
+
+	dialer := websocket.DefaultDialer
+	if b.proxyURL != "" {
+		proxyURL, err := url.Parse(b.proxyURL)
+		if err != nil {
+			return nil
+		}
+		dialer.Proxy = http.ProxyURL(proxyURL)
+	}
+
+	b.conn, _, err = dialer.Dial(wssUrl, nil)
 
 	if b.requiresAuthentication() {
 		if err = b.sendAuth(); err != nil {
