@@ -9,7 +9,7 @@ import (
 
 func (s *BybitClientRequest) GetBorrowableCoins(ctx context.Context, opts ...RequestOption) (res *ServerResponse, err error) {
 	r := &request{
-		method:   http.MethodPost,
+		method:   http.MethodGet,
 		endpoint: "/v5/crypto-loan-common/loanable-data",
 		secType:  secTypeNone,
 	}
@@ -19,7 +19,7 @@ func (s *BybitClientRequest) GetBorrowableCoins(ctx context.Context, opts ...Req
 
 func (s *BybitClientRequest) GetCollateralCoins(ctx context.Context, opts ...RequestOption) (res *ServerResponse, err error) {
 	r := &request{
-		method:   http.MethodPost,
+		method:   http.MethodGet,
 		endpoint: "/v5/crypto-loan-common/collateral-data",
 		secType:  secTypeNone,
 	}
@@ -29,7 +29,7 @@ func (s *BybitClientRequest) GetCollateralCoins(ctx context.Context, opts ...Req
 
 func (s *BybitClientRequest) GetMaxCollateralAmount(ctx context.Context, opts ...RequestOption) (res *ServerResponse, err error) {
 	r := &request{
-		method:   http.MethodPost,
+		method:   http.MethodGet,
 		endpoint: "/v5/crypto-loan-common/max-collateral-amount",
 		secType:  secTypeSigned,
 	}
