@@ -100,7 +100,7 @@ func GetMarkPriceKline(err error, data []byte, res *models.MarketMarkPriceKlineR
 func (s *BybitClientRequest) GetIndexPriceKline(ctx context.Context, opts ...RequestOption) (res *ServerResponse, err error) {
 	r := &request{
 		method:   http.MethodGet,
-		endpoint: "/v5/market/mark-price-kline",
+		endpoint: "/v5/market/index-price-kline",
 		secType:  secTypeNone,
 	}
 	data, err := SendRequest(ctx, opts, r, s, err)
@@ -139,7 +139,7 @@ func GetIndexPriceKline(err error, data []byte, res *models.MarketIndexPriceKlin
 func (s *BybitClientRequest) GetPremiumIndexPriceKline(ctx context.Context, opts ...RequestOption) (res *ServerResponse, err error) {
 	r := &request{
 		method:   http.MethodGet,
-		endpoint: "/v5/market/mark-price-kline",
+		endpoint: "/v5/market/premium-index-price-kline",
 		secType:  secTypeNone,
 	}
 	data, err := SendRequest(ctx, opts, r, s, err)

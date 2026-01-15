@@ -284,3 +284,14 @@ func (s *BybitClientRequest) GetRenewOrderInfo(ctx context.Context, opts ...Requ
 	data, err := SendRequest(ctx, opts, r, s, err)
 	return GetServerResponse(err, data)
 }
+
+// GetCryptoLoanMaxCollateralAmount gets the max collateral amount for crypto loan
+func (s *BybitClientRequest) GetCryptoLoanMaxCollateralAmount(ctx context.Context, opts ...RequestOption) (res *ServerResponse, err error) {
+	r := &request{
+		method:   http.MethodGet,
+		endpoint: "/v5/crypto-loan/max-collateral-amount",
+		secType:  secTypeSigned,
+	}
+	data, err := SendRequest(ctx, opts, r, s, err)
+	return GetServerResponse(err, data)
+}

@@ -308,3 +308,14 @@ func (s *BybitClientRequest) ManualRepayWithoutAssetConversion(ctx context.Conte
 	data, err := SendRequest(ctx, opts, r, s, err)
 	return GetServerResponse(err, data)
 }
+
+// SetLimitPriceAction sets the limit order price action when it exceeds the price limit
+func (s *BybitClientRequest) SetLimitPriceAction(ctx context.Context, opts ...RequestOption) (res *ServerResponse, err error) {
+	r := &request{
+		method:   http.MethodPost,
+		endpoint: "/v5/account/set-limit-px-action",
+		secType:  secTypeSigned,
+	}
+	data, err := SendRequest(ctx, opts, r, s, err)
+	return GetServerResponse(err, data)
+}
